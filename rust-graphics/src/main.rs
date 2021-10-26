@@ -1,3 +1,4 @@
 fn main() {
-    println!("Hello, rust-graphics!");
+    let console_bits = 16;
+    println!("Hello, it's {}-bit rust-graphics !!!", console_bits);
 }

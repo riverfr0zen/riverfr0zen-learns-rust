@@ -8,6 +8,8 @@
             "type": "lldb",
             "request": "launch",
             "name": "hello-rust",
+            // Cargo support from CodeLLDB
+            // https://github.com/vadimcn/vscode-lldb/blob/master/MANUAL.md#cargo-support
             "cargo": {
                 "args": [
                     "build",
@@ -30,7 +32,6 @@
             "cargo": {
                 "args": [
                     "build",
-                    // "--bin=hello-rust",
                     "--package=rust-graphics"
                 ],
                 "filter": {
