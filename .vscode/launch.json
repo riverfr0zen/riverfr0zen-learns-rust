@@ -28,18 +28,18 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "rust-graphics",
+            "name": "explore-bevy-book",
             "cargo": {
                 "args": [
                     "build",
-                    "--package=rust-graphics"
+                    "--package=explore-bevy-book"
                 ],
                 "filter": {
-                  "name": "rust-graphics",
+                  "name": "explore-bevy-book",
                   "kind": "bin"
                 }
             },
-            "program": "${workspaceFolder}/target/debug/rust-graphics",
+            "program": "${workspaceFolder}/target/debug/explore-bevy-book",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
