@@ -15,9 +15,12 @@ fn main() {
         .run();
 }
 
+struct HelloTimer(Timer);
 
-fn hello_world() {
-    println!("hello world!");
+fn hello_world(time: Res<Time>, mut timer: ResMut<HelloTimer>) {
+    if timer.0.tick(time.delta()).just_finished() {
+        println!("hello world!");
+    }
 }
 
 
@@ -33,16 +36,24 @@ fn add_people(mut commands: Commands) {
     commands.spawn().insert(Person).insert(Name("Cat".to_string()));
 }
 
+struct GreetTimer(Timer);
 
-fn greet_people(query: Query<&Name, With<Person>>) {
-    // From tutorial: You can interpret the Query above as: 
-    // "iterate over every Name component for entities that 
-    // also have a Person component"
-    for name in query.iter() {
-        if name.0 == "Arnold Rimmer" {
-            println!("It's Arnold Arnold Arnold Rimmer!")
-        } else {
-            println!("Alright {}!", name.0)
+
+fn greet_people(
+    time: Res<Time>, 
+    mut timer: ResMut<GreetTimer>, 
+    query: Query<&Name, With<Person>>
+) {
+    if timer.0.tick(time.delta()).just_finished() {
+        // From tutorial: You can interpret the Query above as: 
+        // "iterate over every Name component for entities that 
+        // also have a Person component"
+        for name in query.iter() {
+            if name.0 == "Arnold Rimmer" {
+                println!("It's Arnold Arnold Arnold Rimmer!")
+            } else {
+                println!("Alright {}!", name.0)
+            }
         }
     }
 }
@@ -52,7 +63,9 @@ pub struct HelloPlugin;
 impl Plugin for HelloPlugin {
     fn build(&self, app: &mut AppBuilder) {
         // Startup systems only run at the beginning
-        app.add_startup_system(add_people.system())
+        app.insert_resource(HelloTimer(Timer::from_seconds(1.5, true)))
+            .insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
+            .add_startup_system(add_people.system())
             .add_system(hello_world.system())
             .add_system(greet_people.system());
     }
