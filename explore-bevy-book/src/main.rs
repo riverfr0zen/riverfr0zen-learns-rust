@@ -62,9 +62,9 @@ pub struct HelloPlugin;
 
 impl Plugin for HelloPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        // Startup systems only run at the beginning
         app.insert_resource(HelloTimer(Timer::from_seconds(1.5, true)))
             .insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
+            // Startup systems only run at the beginning
             .add_startup_system(add_people.system())
             .add_system(hello_world.system())
             .add_system(greet_people.system());
