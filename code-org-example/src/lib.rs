@@ -7,21 +7,17 @@ mod tests {
     }
 }
 
-mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
+// Using a semicolon after `mod front_of_house` rather than using 
+// a block tells Rust to load the contents of the module from 
+// another file with the same name as the module. 
+mod front_of_house;
 
-        fn seat_at_table() {}
-    }
-
-    mod serving {
-        fn take_order() {}
-
-        fn serve_order() {}
-
-        fn take_payment() {}
-    }
-}
+// Demonstrating putting `hosting` into scope with `use` so that
+// methods can be called more succinctly (as though they were local)
+//
+// Interesting that you can use `use` to bring into scope even within the
+// same file.
+use crate::front_of_house::hosting;
 
 
 fn serve_order() {}
@@ -93,13 +89,6 @@ pub fn eat_at_restaurant() {
     let order2 = back_of_house::Appetizer::Salad;
 }
 
-
-// Demonstrating putting `hosting` into scope with `use` so that
-// methods can be called more succinctly (as though they were local)
-//
-// Interesting that you can use `use` to bring into scope even within the
-// same file.
-use crate::front_of_house::hosting;
 
 pub fn eat_at_restaurant2() {
     hosting::add_to_waitlist();
