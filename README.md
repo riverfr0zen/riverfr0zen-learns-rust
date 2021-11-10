@@ -12,3 +12,5 @@ Fiddling around with Rust
 vscode --install-extension matklad.rust-analyzer
 vscode --install-extension vadimcn.vscode-lldb
 ``` 
+
+See also the [Bevy exploration README](explore-bevy-book/README.md) for other installation requirements.

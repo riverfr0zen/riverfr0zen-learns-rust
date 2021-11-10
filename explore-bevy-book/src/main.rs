@@ -45,10 +45,10 @@ fn greet_people(
     query: Query<&Name, With<Person>>
 ) {
     if timer.0.tick(time.delta()).just_finished() {
-        // From tutorial: You can interpret the Query above as: 
-        // "iterate over every Name component for entities that 
-        // also have a Person component"
         for name in query.iter() {
+            // From tutorial: You can interpret the Query above as: 
+            // "iterate over every Name component for entities that 
+            // also have a Person component"
             if name.0 == "Arnold Rimmer" {
                 println!("It's Arnold Arnold Arnold Rimmer!")
             } else {
