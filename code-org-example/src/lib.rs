@@ -27,7 +27,7 @@ mod back_of_house {
         cook_order();
         // We can also construct relative paths that begin in the parent 
         // module by using super at the start of the path. This is analogous 
-        // to starting a filesystem path with the ".." syntax. 
+        // to starting a filesystem path with the "../" syntax. 
         super::serve_order();
     }
 
