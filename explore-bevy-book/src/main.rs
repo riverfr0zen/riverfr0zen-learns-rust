@@ -7,7 +7,7 @@
 use bevy::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
         // Among other things, DefaultPlugins add a WindowPlugin and
         // and a WinitPlugin, and also adds an event loop
         .add_plugins(DefaultPlugins)
@@ -24,9 +24,11 @@ fn hello_world(time: Res<Time>, mut timer: ResMut<HelloTimer>) {
 }
 
 
+#[derive(Component)]
 struct Person;
 
 
+#[derive(Component)]
 struct Name(String);
 
 
@@ -61,7 +63,7 @@ fn greet_people(
 pub struct HelloPlugin;
 
 impl Plugin for HelloPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.insert_resource(HelloTimer(Timer::from_seconds(1.5, true)))
             .insert_resource(GreetTimer(Timer::from_seconds(2.0, true)))
             // Startup systems only run at the beginning

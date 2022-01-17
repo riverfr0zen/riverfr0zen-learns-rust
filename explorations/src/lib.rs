@@ -13,3 +13,5 @@ pub mod intro {
         "Hello from the lib"
     }
 }
+
+pub mod explore_bevy_examples;
