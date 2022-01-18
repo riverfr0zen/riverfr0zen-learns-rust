@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 
+pub const CLEAR_COLOR: Color = Color::rgb(0.04, 0.04, 0.04);
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_SCALE: f32 = 10.0;
 const SNAKE_SPEED: i32 = 1;

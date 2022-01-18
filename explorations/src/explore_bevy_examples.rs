@@ -9,6 +9,13 @@ pub mod snakemod;
 
  pub fn snakeapp() {
     App::new()
+        .insert_resource(WindowDescriptor {
+            title: "Snake!".to_string(),
+            width: 500.0,
+            height: 500.0,
+            ..Default::default()
+        })
+        .insert_resource(ClearColor(snakemod::CLEAR_COLOR))
         .add_startup_system(snakemod::setup_camera)
         .add_startup_system(snakemod::spawn_snake)
         .add_system(snakemod::snake_movement)
