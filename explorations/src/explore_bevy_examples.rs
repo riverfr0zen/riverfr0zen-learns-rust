@@ -2,5 +2,7 @@ use bevy::prelude::*;
 
 
 pub fn snakeapp() {
-    App::new().run();   
+    App::new()
+       .add_plugins(DefaultPlugins)
+       .run();   
 }
