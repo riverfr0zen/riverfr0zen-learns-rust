@@ -53,12 +53,33 @@ fn spawn_snake(mut commands: Commands) {
         .insert(SnakeHead);
 }
 
- fn snake_movement(mut head_positions: Query<(&SnakeHead, &mut Transform)>) {
+
+fn snake_movement(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut head_positions: Query<&mut Transform, With<SnakeHead>>
+) {
     /*
     * The main new concept here is that Query type. We can use it to iterate through 
     * all entities that have both the SnakeHead component and the Transform component. 
+    * 
+    * Note the use of `With` in the signature above, used to Query for entities
+    * that have the SnakeHead component, but without actually needing to *retrieve*
+    * it (and thus improving parallelization). See "Controlling the snake" section 
+    * in tutorial.
     */
-    for (_head, mut transform) in head_positions.iter_mut() {
-        transform.translation.y += SNAKE_SPEED;
+    for mut transform in head_positions.iter_mut() {
+        if keyboard_input.pressed(KeyCode::Left) {
+            transform.translation.x -= SNAKE_SPEED;
+            // println!("x: {}", transform.translation.x);
+        }
+        if keyboard_input.pressed(KeyCode::Right) {
+            transform.translation.x += SNAKE_SPEED;
+        }
+        if keyboard_input.pressed(KeyCode::Up) {
+            transform.translation.y += SNAKE_SPEED;
+        }
+        if keyboard_input.pressed(KeyCode::Down) {
+            transform.translation.y -= SNAKE_SPEED;
+        }
     }
 }
