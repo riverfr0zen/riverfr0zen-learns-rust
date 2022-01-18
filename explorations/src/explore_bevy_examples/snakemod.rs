@@ -3,7 +3,7 @@ use bevy::prelude::*;
 
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_SCALE: f32 = 10.0;
-const SNAKE_SPEED: f32 = 2.0;
+const SNAKE_SPEED: i32 = 1;
 const ARENA_WIDTH: u32 = 10;
 const ARENA_HEIGHT: u32 = 10;
 
@@ -72,7 +72,7 @@ pub fn spawn_snake(mut commands: Commands) {
 
 pub fn snake_movement(
     keyboard_input: Res<Input<KeyCode>>,
-    mut head_positions: Query<&mut Transform, With<SnakeHead>>
+    mut head_positions: Query<&mut Position, With<SnakeHead>>
 ) {
     /*
     * The main new concept here is that Query type. We can use it to iterate through 
@@ -83,19 +83,19 @@ pub fn snake_movement(
     * it (and thus improving parallelization). See "Controlling the snake" section 
     * in tutorial.
     */
-    for mut transform in head_positions.iter_mut() {
+    for mut pos in head_positions.iter_mut() {
         if keyboard_input.pressed(KeyCode::Left) {
-            transform.translation.x -= SNAKE_SPEED;
+            pos.x -= SNAKE_SPEED;
             // println!("x: {}", transform.translation.x);
         }
         if keyboard_input.pressed(KeyCode::Right) {
-            transform.translation.x += SNAKE_SPEED;
+            pos.x += SNAKE_SPEED;
         }
         if keyboard_input.pressed(KeyCode::Up) {
-            transform.translation.y += SNAKE_SPEED;
+            pos.y += SNAKE_SPEED;
         }
         if keyboard_input.pressed(KeyCode::Down) {
-            transform.translation.y -= SNAKE_SPEED;
+            pos.y -= SNAKE_SPEED;
         }
     }
 }
