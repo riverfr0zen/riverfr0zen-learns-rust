@@ -4,6 +4,8 @@ use bevy::prelude::*;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_SCALE: f32 = 10.0;
 const SNAKE_SPEED: f32 = 2.0;
+const ARENA_WIDTH: u32 = 10;
+const ARENA_HEIGHT: u32 = 10;
 
 
 pub fn setup_camera(mut commands: Commands) {
@@ -18,6 +20,30 @@ pub fn setup_camera(mut commands: Commands) {
  */
  #[derive(Component)]
 pub struct SnakeHead;
+
+
+#[derive(Component, Clone, Copy, PartialEq, Eq)]
+pub struct Position {
+    x: i32,
+    y: i32,
+}
+
+
+#[derive(Component)]
+pub struct Size {
+    width: f32,
+    height: f32
+}
+
+
+impl Size {
+    pub fn square(x: f32) -> Self {
+        Self {
+            width: x,
+            height: x,
+        }
+    }
+}
 
 
 pub fn spawn_snake(mut commands: Commands) {
@@ -38,7 +64,9 @@ pub fn spawn_snake(mut commands: Commands) {
             },
             ..Default::default()
         })
-        .insert(SnakeHead);
+        .insert(SnakeHead)
+        .insert(Position { x: 3, y: 3 })
+        .insert(Size::square(0.8));
 }
 
 
@@ -69,5 +97,47 @@ pub fn snake_movement(
         if keyboard_input.pressed(KeyCode::Down) {
             transform.translation.y -= SNAKE_SPEED;
         }
+    }
+}
+
+
+pub fn size_scaling(windows: Res<Windows>, mut q: Query<(&Size, &mut Transform)>) {
+    /*
+     * (From tut): The sizing logic goes like so: if something has a width of 1 
+     * in a grid of 40, and the window is 400px across, then it should have a 
+     * width of 10.
+     */
+    let window = windows.get_primary().unwrap();
+    for (sprite_size, mut transform) in q.iter_mut() {
+        transform.scale = Vec3::new(
+            sprite_size.width / ARENA_WIDTH as f32 * window.width() as f32,
+            sprite_size.height / ARENA_HEIGHT as f32 * window.height() as f32,
+            1.0,
+        );
+    }
+}
+
+
+pub fn position_translation(windows: Res<Windows>, mut q: Query<(&Position, &mut Transform)>) {
+    /*
+     * (From tut): The position translation: if an item’s x coordinate is at 5 in our
+     * system, the width in our system is 10, and the window width is 200, then the 
+     * coordinate should be 5 / 10 * 200 - 200 / 2. We subtract half the window width 
+     * because our coordinate system starts at the bottom left, and Translation starts 
+     * from the center. We then add half the size of a single tile, because we want our 
+     * sprites bottom left corner to be at the bottom left of a tile, not the center.
+     */
+
+    fn convert(pos: f32, bound_window: f32, bound_game: f32) -> f32 {
+        let tile_size = bound_window / bound_game;
+        pos / bound_game * bound_window - (bound_window / 2.) + (tile_size / 2.)
+    }
+    let window = windows.get_primary().unwrap();
+    for (pos, mut transform) in q.iter_mut() {
+        transform.translation = Vec3::new(
+            convert(pos.x as f32, window.width() as f32, ARENA_WIDTH as f32),
+            convert(pos.y as f32, window.height() as f32, ARENA_HEIGHT as f32),
+            0.0,
+        );
     }
 }
