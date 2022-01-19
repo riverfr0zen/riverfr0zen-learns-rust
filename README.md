@@ -13,6 +13,17 @@ vscode --install-extension matklad.rust-analyzer
 vscode --install-extension vadimcn.vscode-lldb
 ``` 
 
+In addition the following was added to `.vscode/settings.json` to format code on save.
+
+```
+{
+    "[rust]": {
+        "editor.formatOnSave": true
+    },
+}
+```
+
+
 See also the [Bevy exploration README](explore-bevy-book/README.md) for other installation requirements.
 
  
