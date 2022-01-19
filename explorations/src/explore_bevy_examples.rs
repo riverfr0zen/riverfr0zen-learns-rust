@@ -19,7 +19,28 @@ pub mod snakemod;
         .insert_resource(ClearColor(snakemod::CLEAR_COLOR))
         .add_startup_system(snakemod::setup_camera)
         .add_startup_system(snakemod::spawn_snake)
-        .add_system(snakemod::snake_movement)
+        /*
+         * There’s a few new things here. .label(x) tags a system 
+         * (or system set) with a label. On its own this does nothing, 
+         * but the gain is that you can then use .before(x) or .after(x) on 
+         * other systems, to specify order. So here we’re tagging the 
+         * snake_movement system with .label(SnakeMovement::Movement), and 
+         * for the input system we’re adding .before(SnakeMovement::Movement), 
+         * to ensure that on a given frame, we get the user input before we 
+         * move the snake.
+         */
+        .add_system(
+            snakemod::snake_movement_input
+                .label(snakemod::SnakeMovement::Input)
+                .before(snakemod::SnakeMovement::Movement),
+        )
+        .add_system_set(
+            SystemSet::new()
+                .with_run_criteria(FixedTimestep::step(snakemod::SNAKE_STEP))
+                .with_system(snakemod::snake_movement.label(
+                    snakemod::SnakeMovement::Movement
+                )),
+        )
         /*
          * We don’t want this going off constantly. We want to spawn food 
          * every second, not every frame. Since this is a common need in 

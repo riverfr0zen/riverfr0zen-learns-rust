@@ -6,12 +6,35 @@ const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
 pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_SCALE: f32 = 10.0;
-const SNAKE_SPEED: i32 = 1;
+// pub const SNAKE_SPEED: f64 = 0.150;
+// pub const SNAKE_STEP: f64 = 0.150;
+pub const SNAKE_STEP: f64 = 0.150;
 const ARENA_WIDTH: u32 = 10;
 const ARENA_HEIGHT: u32 = 10;
 
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+}
+
+
+#[derive(PartialEq, Copy, Clone)]
+enum Direction {
+    Left,
+    Up,
+    Right,
+    Down,
+}
+
+
+impl Direction {
+    fn opposite(self) -> Self {
+        match self {
+            Self::Left => Self::Right,
+            Self::Right => Self::Left,
+            Self::Up => Self::Down,
+            Self::Down => Self::Up,
+        }
+    }
 }
 
 
@@ -21,7 +44,29 @@ pub fn setup_camera(mut commands: Commands) {
  * for entities with the SnakeHead component.
  */
  #[derive(Component)]
-pub struct SnakeHead;
+pub struct SnakeHead {
+    direction: Direction
+}
+
+
+/*
+ * There’s a bit of a problem with our current system setup , because we’re asking 
+ * for input in the same system as we’re moving our snake. So here’s the goal: we 
+ * want to split up the input handling from the movement, and make sure the movement 
+ * happens at a fixed timestep. 
+ * 
+ * To accomplish this we’re introducing the concept of system labels.
+ * 
+ * Any type that implements SystemLabel can be used for labeling. Here we’re defining 
+ * our own enum and letting bevy derive SystemLabel for us. 
+ */
+#[derive(SystemLabel, Debug, Hash, PartialEq, Eq, Clone)]
+pub enum SnakeMovement {
+    Input,
+    Movement,
+    Eating,
+    Growth,
+}
 
 
 #[derive(Component)]
@@ -70,39 +115,56 @@ pub fn spawn_snake(mut commands: Commands) {
             },
             ..Default::default()
         })
-        .insert(SnakeHead)
+        .insert(SnakeHead {
+            direction: Direction::Up
+        })
         .insert(Position { x: 3, y: 3 })
         .insert(Size::square(0.8));
 }
 
 
-pub fn snake_movement(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut head_positions: Query<&mut Position, With<SnakeHead>>
-) {
-    /*
-    * The main new concept here is that Query type. We can use it to iterate through 
-    * all entities that have both the SnakeHead component and the Transform component. 
-    * 
-    * Note the use of `With` in the signature above, used to Query for entities
-    * that have the SnakeHead component, but without actually needing to *retrieve*
-    * it (and thus improving parallelization). See "Controlling the snake" section 
-    * in tutorial.
-    */
-    for mut pos in head_positions.iter_mut() {
-        if keyboard_input.pressed(KeyCode::Left) {
-            pos.x -= SNAKE_SPEED;
-            // println!("x: {}", transform.translation.x);
+pub fn snake_movement_input(keyboard_input: Res<Input<KeyCode>>, mut heads: Query<&mut SnakeHead>) {
+    if let Some(mut head) = heads.iter_mut().next() {
+        /*
+         * Notice this interesting way of assigning `dir` with an `if` statement
+         */
+        let dir: Direction = if keyboard_input.pressed(KeyCode::Left) {
+            Direction::Left
+        } else if keyboard_input.pressed(KeyCode::Down) {
+            Direction::Down
+        } else if keyboard_input.pressed(KeyCode::Up) {
+            Direction::Up
+        } else if keyboard_input.pressed(KeyCode::Right) {
+            Direction::Right
+        } else {
+            head.direction
+        };
+        /*
+         * This is what prevents the snake from turning on itself
+         */
+        if dir != head.direction.opposite() {
+            head.direction = dir;
         }
-        if keyboard_input.pressed(KeyCode::Right) {
-            pos.x += SNAKE_SPEED;
-        }
-        if keyboard_input.pressed(KeyCode::Up) {
-            pos.y += SNAKE_SPEED;
-        }
-        if keyboard_input.pressed(KeyCode::Down) {
-            pos.y -= SNAKE_SPEED;
-        }
+    }
+}
+
+
+pub fn snake_movement(mut heads: Query<(&mut Position, &SnakeHead)>) {
+    if let Some((mut head_pos, head)) = heads.iter_mut().next() {
+        match &head.direction {
+            Direction::Left => {
+                head_pos.x -= 1;
+            }
+            Direction::Right => {
+                head_pos.x += 1;
+            }
+            Direction::Up => {
+                head_pos.y += 1;
+            }
+            Direction::Down => {
+                head_pos.y -= 1;
+            }
+        };
     }
 }
 
