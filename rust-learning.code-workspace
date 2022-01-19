@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"gitblame.commitUrl": "https://bitbucket.org/riverfr0zen/rust-learning/commits/${hash}"
+	}
 }

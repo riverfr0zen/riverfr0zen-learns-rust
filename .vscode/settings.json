@@ -1,3 +1,5 @@
+// Not sure we need this file. might be able to put this in the workspace file?
+
 {
     "[rust]": {
         // "editor.formatOnSave": true
