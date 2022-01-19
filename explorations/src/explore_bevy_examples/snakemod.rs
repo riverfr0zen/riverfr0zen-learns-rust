@@ -1,13 +1,14 @@
 use bevy::prelude::*;
-
+use rand::prelude::random;
 
 pub const CLEAR_COLOR: Color = Color::rgb(0.04, 0.04, 0.04);
+const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
+pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_SCALE: f32 = 10.0;
 const SNAKE_SPEED: i32 = 1;
 const ARENA_WIDTH: u32 = 10;
 const ARENA_HEIGHT: u32 = 10;
-
 
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
@@ -21,6 +22,10 @@ pub fn setup_camera(mut commands: Commands) {
  */
  #[derive(Component)]
 pub struct SnakeHead;
+
+
+#[derive(Component)]
+struct Food;
 
 
 #[derive(Component, Clone, Copy, PartialEq, Eq)]
@@ -102,6 +107,24 @@ pub fn snake_movement(
 }
 
 
+pub fn food_spawner(mut commands: Commands) {
+    commands
+        .spawn_bundle(SpriteBundle {
+            sprite: Sprite {
+                color: FOOD_COLOR,
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(Food)
+        .insert(Position {
+            x: (random::<f32>() * ARENA_WIDTH as f32) as i32,
+            y: (random::<f32>() * ARENA_HEIGHT as f32) as i32,
+        })
+        .insert(Size::square(0.8));
+}
+
+
 pub fn size_scaling(windows: Res<Windows>, mut q: Query<(&Size, &mut Transform)>) {
     /*
      * (From tut): The sizing logic goes like so: if something has a width of 1 
@@ -142,3 +165,4 @@ pub fn position_translation(windows: Res<Windows>, mut q: Query<(&Position, &mut
         );
     }
 }
+
