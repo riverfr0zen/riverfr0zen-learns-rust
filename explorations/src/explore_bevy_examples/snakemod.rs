@@ -5,6 +5,7 @@ pub const WINDOW_WIDTH: f32 = 500.0;
 pub const WINDOW_HEIGHT: f32 = 500.0;
 pub const CLEAR_COLOR: Color = Color::rgb(0.04, 0.04, 0.04);
 const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
+const FOOD_SIZE: f32 = 0.8;
 pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_HEAD_SIZE: f32 = 0.8;
@@ -278,7 +279,7 @@ pub fn food_spawner(mut commands: Commands) {
             x: (random::<f32>() * ARENA_WIDTH as f32) as i32,
             y: (random::<f32>() * ARENA_HEIGHT as f32) as i32,
         })
-        .insert(Size::square(0.8));
+        .insert(Size::square(FOOD_SIZE));
 }
 
 
