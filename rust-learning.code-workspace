@@ -5,6 +5,14 @@
 		}
 	],
 	"settings": {
-		"gitblame.commitUrl": "https://bitbucket.org/riverfr0zen/rust-learning/commits/${hash}"
+		"gitblame.commitUrl": "https://bitbucket.org/riverfr0zen/rust-learning/commits/${hash}",
+		// These delays now set in user context
+		// This is the setting to delay the popup
+		// "editor.hover.delay": 1500,
+		// This setting delays the inline as-you-type suggestions.
+		// "editor.quickSuggestionsDelay": 10,
+		"[rust]": {
+			// "editor.formatOnSave": true
+		},		
 	}
 }
