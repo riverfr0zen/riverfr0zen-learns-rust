@@ -1,11 +1,15 @@
 use bevy::prelude::*;
 use rand::prelude::random;
 
+pub const WINDOW_WIDTH: f32 = 500.0;
+pub const WINDOW_HEIGHT: f32 = 500.0;
 pub const CLEAR_COLOR: Color = Color::rgb(0.04, 0.04, 0.04);
 const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
 pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
+const SNAKE_HEAD_SIZE: f32 = 0.8;
 const SNAKE_SEGMENT_COLOR: Color = Color::rgb(0.3, 0.3, 0.3);
+const SNAKE_SEGMENT_SIZE: f32 = 0.65;
 // pub const SNAKE_SPEED: f64 = 0.150;
 // pub const SNAKE_STEP: f64 = 0.150;
 pub const SNAKE_STEP: f64 = 0.150;
@@ -130,7 +134,7 @@ fn spawn_segment(mut commands: Commands, position: Position) -> Entity {
         })
         .insert(SnakeSegment)
         .insert(position)
-        .insert(Size::square(0.65))
+        .insert(Size::square(SNAKE_SEGMENT_SIZE))
         .id()
 }
 
@@ -170,7 +174,7 @@ pub fn spawn_snake(mut commands: Commands, mut segments: ResMut<SnakeSegments>) 
             })
             .insert(SnakeSegment)
             .insert(Position { x: 3, y: 3 })
-            .insert(Size::square(0.8))
+            .insert(Size::square(SNAKE_HEAD_SIZE))
             .id(),
         spawn_segment(commands, Position { x: 3, y: 2 }),
     ];

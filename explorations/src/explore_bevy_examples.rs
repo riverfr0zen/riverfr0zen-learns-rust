@@ -12,8 +12,8 @@ pub mod snakemod;
     App::new()
         .insert_resource(WindowDescriptor {
             title: "Snake!".to_string(),
-            width: 500.0,
-            height: 500.0,
+            width: snakemod::WINDOW_WIDTH,
+            height: snakemod::WINDOW_HEIGHT,
             ..Default::default()
         })
         .insert_resource(ClearColor(snakemod::CLEAR_COLOR))
