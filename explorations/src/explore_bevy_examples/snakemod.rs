@@ -6,7 +6,6 @@ const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
 pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_SEGMENT_COLOR: Color = Color::rgb(0.3, 0.3, 0.3);
-const SNAKE_SCALE: f32 = 10.0;
 // pub const SNAKE_SPEED: f64 = 0.150;
 // pub const SNAKE_STEP: f64 = 0.150;
 pub const SNAKE_STEP: f64 = 0.150;
@@ -204,8 +203,39 @@ pub fn snake_movement_input(keyboard_input: Res<Input<KeyCode>>, mut heads: Quer
 }
 
 
-pub fn snake_movement(mut heads: Query<(&mut Position, &SnakeHead)>) {
-    if let Some((mut head_pos, head)) = heads.iter_mut().next() {
+/*
+ * (From tut) We’ll need to change how we get the position of the head, because we 
+ * can’t have two queries that are competing for Position components, and we’ll 
+ * need to have access to our SnakeSegments resource. (irf: Should look up what
+ * these resource competition means. Is the Query system really so easily
+ * locked up? Why can we have one Query against Entity, SnakeHead and Position, 
+ * and another against just Position?
+ * 
+ * (From tut) There’s a lot going on here. We’re getting the Entity of the snake 
+ * head this time, instead of getting its position from a Query. Then we use 
+ * positions.get_mut(head_entity).unwrap(), to get the Position of the head. The 
+ * segment positions are retrieved in a similar manner, by just iterating over the 
+ * segments we have in the SnakeSegments resource, and getting the Position for each 
+ * one, from the positions query.
+ * 
+ * After we change the head position, we just need to set the position of each 
+ * segment to the position of the segment in front of it. The first tail segment 
+ * gets set to the head position, second tail segment gets set to the first tail 
+ * segment position, etc. There’s some fun iterator magic in there, but it’s not 
+ * bevy-specific so I’m not going to spend too much time on it. (irf: haha dammit)
+ */
+pub fn snake_movement(
+    segments: ResMut<SnakeSegments>,
+    mut heads: Query<(Entity, &SnakeHead)>,
+    mut positions: Query<&mut Position>,
+) {
+    if let Some((head_entity, head)) = heads.iter_mut().next() {
+        let segment_positions = segments
+            .0
+            .iter()
+            .map(|e| *positions.get_mut(*e).unwrap())
+            .collect::<Vec<Position>>();
+        let mut head_pos = positions.get_mut(head_entity).unwrap();
         match &head.direction {
             Direction::Left => {
                 head_pos.x -= 1;
@@ -220,6 +250,12 @@ pub fn snake_movement(mut heads: Query<(&mut Position, &SnakeHead)>) {
                 head_pos.y -= 1;
             }
         };
+        segment_positions
+            .iter()
+            .zip(segments.0.iter().skip(1))
+            .for_each(|(pos, segment)| {
+                *positions.get_mut(*segment).unwrap() = *pos;
+            });
     }
 }
 
