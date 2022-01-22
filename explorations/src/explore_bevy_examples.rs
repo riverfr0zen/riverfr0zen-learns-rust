@@ -17,6 +17,7 @@ pub mod snakemod;
             ..Default::default()
         })
         .insert_resource(ClearColor(snakemod::CLEAR_COLOR))
+        .insert_resource(snakemod::SnakeSegments::default())
         .add_startup_system(snakemod::setup_camera)
         .add_startup_system(snakemod::spawn_snake)
         /*

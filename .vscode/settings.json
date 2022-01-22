@@ -1,6 +1,11 @@
 // Not sure we need this file. might be able to put this in the workspace file?
 
 {
+    // These delays now set in user context
+    // This is the setting to delay the popup
+    // "editor.hover.delay": 1500,
+    // This setting delays the inline as-you-type suggestions.
+    // "editor.quickSuggestionsDelay": 10,
     "[rust]": {
         // "editor.formatOnSave": true
     },

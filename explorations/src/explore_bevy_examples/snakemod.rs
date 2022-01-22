@@ -5,6 +5,7 @@ pub const CLEAR_COLOR: Color = Color::rgb(0.04, 0.04, 0.04);
 const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
 pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
+const SNAKE_SEGMENT_COLOR: Color = Color::rgb(0.3, 0.3, 0.3);
 const SNAKE_SCALE: f32 = 10.0;
 // pub const SNAKE_SPEED: f64 = 0.150;
 // pub const SNAKE_STEP: f64 = 0.150;
@@ -47,6 +48,19 @@ impl Direction {
 pub struct SnakeHead {
     direction: Direction
 }
+
+
+#[derive(Component)]
+pub struct SnakeSegment;
+
+
+/*
+ * (From tut) The tail of the snake is somewhat complex. For each segment, we need 
+ * to know where it needs to go next. The way we’re going to approach this is to 
+ * put the snake segments in a Vec, and store that as a resource. (see snakeapp())
+ */
+#[derive(Default)]
+pub struct SnakeSegments(Vec<Entity>);
 
 
 /*
@@ -97,29 +111,70 @@ impl Size {
 }
 
 
-pub fn spawn_snake(mut commands: Commands) {
-    /*
-     * (From tut): This will spawn a new entity, which will have all the components 
-     * from a SpriteBundle, and also the SnakeHead component. 
-     */
+/*
+ * (From tut) Since we’re going to be spawning segments from a couple places (when you 
+ * eat food and when you initialize the snake), we’ll create a helper function.
+ * 
+ * This should look very similar to the spawning of the SnakeHead, but instead of a 
+ * SnakeHead component, it’s got a SnakeSegment component. Something new here is that 
+ * we’re then getting that Entity (which is really just an id), by using the id 
+ * function, and returning it so that callers can use it.
+ */
+fn spawn_segment(mut commands: Commands, position: Position) -> Entity {
     commands
         .spawn_bundle(SpriteBundle {
             sprite: Sprite {
-                color: SNAKE_HEAD_COLOR,
-                ..Default::default()
-            },
-            transform: Transform {
-                // scale: Vec3::new(SNAKE_SCALE, SNAKE_SCALE, SNAKE_SCALE),
-                scale: Vec3::new(SNAKE_SCALE, SNAKE_SCALE, SNAKE_SCALE),
+                color: SNAKE_SEGMENT_COLOR,
                 ..Default::default()
             },
             ..Default::default()
         })
-        .insert(SnakeHead {
-            direction: Direction::Up
-        })
-        .insert(Position { x: 3, y: 3 })
-        .insert(Size::square(0.8));
+        .insert(SnakeSegment)
+        .insert(position)
+        .insert(Size::square(0.65))
+        .id()
+}
+
+
+/*
+ * (If you are looking at the diff for "Adding a tail", you will notice that
+ * the contents of the SpriteBundle has changed, removing the Transform, etc.
+ *  -- this actually happened in a previous part of the tutorial ("Slapping a 
+ * grid on it") -- I just forgot to update it then. But it fits here meaningfully
+ * too).
+ * 
+ * (From tut) Now, we’ll need to modify our game setup function. Instead of just a head, 
+ * it’s also going to spawn… a snake segment (shocked pikachu meme).
+ * 
+ * Our first segment is the head, which you can see now has a .insert(SnakeSegment) 
+ * addition. (irf: This way the head part is also Queryable as a SnakeSegment
+ * I guess?)
+ * 
+ * Our second segment comes from our spawn_segment function. Voila, we’ve got a 
+ * detached little “tail”:
+ */
+pub fn spawn_snake(mut commands: Commands, mut segments: ResMut<SnakeSegments>) {
+    // Remember, segments (SnakeSegments) is a TupleStruct with it's first 
+    // member being a Vec type, so this is why it is being assigned to 
+    // `segments.0` here.
+    segments.0 = vec![
+        commands
+            .spawn_bundle(SpriteBundle {
+                sprite: Sprite {
+                    color: SNAKE_HEAD_COLOR,
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+            .insert(SnakeHead {
+                direction: Direction::Up,
+            })
+            .insert(SnakeSegment)
+            .insert(Position { x: 3, y: 3 })
+            .insert(Size::square(0.8))
+            .id(),
+        spawn_segment(commands, Position { x: 3, y: 2 }),
+    ];
 }
 
 
@@ -227,4 +282,5 @@ pub fn position_translation(windows: Res<Windows>, mut q: Query<(&Position, &mut
         );
     }
 }
+
 
