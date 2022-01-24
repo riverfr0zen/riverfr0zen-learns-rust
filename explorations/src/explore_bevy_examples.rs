@@ -18,6 +18,7 @@ pub mod snakemod;
         })
         .insert_resource(ClearColor(snakemod::CLEAR_COLOR))
         .insert_resource(snakemod::SnakeSegments::default())
+        .add_event::<snakemod::GrowthEvent>()
         .add_startup_system(snakemod::setup_camera)
         .add_startup_system(snakemod::spawn_snake)
         /*
@@ -40,7 +41,17 @@ pub mod snakemod;
                 .with_run_criteria(FixedTimestep::step(snakemod::SNAKE_STEP))
                 .with_system(snakemod::snake_movement.label(
                     snakemod::SnakeMovement::Movement
-                )),
+                ))
+                /*
+                 * We want the eating check to happen after movement, so we add 
+                 * .after(SnakeMovement::Movement) so bevy makes it happen in 
+                 * the right order.
+                 */
+                .with_system(
+                    snakemod::snake_eating
+                        .label(snakemod::SnakeMovement::Eating)
+                        .after(snakemod::SnakeMovement::Movement),
+                )                
         )
         /*
          * We don’t want this going off constantly. We want to spawn food 

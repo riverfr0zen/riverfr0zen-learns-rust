@@ -88,7 +88,7 @@ pub enum SnakeMovement {
 
 
 #[derive(Component)]
-struct Food;
+pub struct Food;
 
 
 #[derive(Component, Clone, Copy, PartialEq, Eq)]
@@ -113,6 +113,8 @@ impl Size {
         }
     }
 }
+
+pub struct GrowthEvent;
 
 
 /*
@@ -214,7 +216,9 @@ pub fn snake_movement_input(keyboard_input: Res<Input<KeyCode>>, mut heads: Quer
  * need to have access to our SnakeSegments resource. (irf: Should look up what
  * these resource competition means. Is the Query system really so easily
  * locked up? Why can we have one Query against Entity, SnakeHead and Position, 
- * and another against just Position?
+ * and another against just Position? ... On further observation I think he just
+ * means that it will lock things up unnecessarily, since later on there is a
+ * system that does multiple queries against Position (see `snake_eating`))
  * 
  * (From tut) There’s a lot going on here. We’re getting the Entity of the snake 
  * head this time, instead of getting its position from a Query. Then we use 
@@ -261,6 +265,34 @@ pub fn snake_movement(
             .for_each(|(pos, segment)| {
                 *positions.get_mut(*segment).unwrap() = *pos;
             });
+    }
+}
+
+
+/*
+ * (From tut) Just iterating through all food positions and seeing if they share 
+ * a position with the head of the snake. If they do, we remove them using the 
+ * handy despawn function, then trigger a GrowthEvent.
+ * 
+ * Using events is a new concept. You can send and recieve events between systems. 
+ * They can be arbitrary structs so you can include any data you want in your 
+ * events. For example, you may have one system that sends jump events, then a 
+ * separate system that processes them. In our case, we’ll have a system that sends 
+ * growth events, and a growth system to process them.
+ */
+pub fn snake_eating(
+    mut commands: Commands,
+    mut growth_writer: EventWriter<GrowthEvent>,
+    food_positions: Query<(Entity, &Position), With<Food>>,
+    head_positions: Query<&Position, With<SnakeHead>>,
+) {
+    for head_pos in head_positions.iter() {
+        for (ent, food_pos) in food_positions.iter() {
+            if food_pos == head_pos {
+                commands.entity(ent).despawn();
+                growth_writer.send(GrowthEvent);
+            }
+        }
     }
 }
 
