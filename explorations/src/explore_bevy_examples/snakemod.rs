@@ -118,6 +118,15 @@ pub struct GrowthEvent;
 
 
 /*
+ * One thing we need to think about for growing is that we need to know where 
+ * the last segment was before moving, because that’s where the new segment 
+ * goes. Let’s create that and add it as a new resource:
+ */
+#[derive(Default)]
+pub struct LastTailPosition(Option<Position>);
+
+
+/*
  * (From tut) Since we’re going to be spawning segments from a couple places (when you 
  * eat food and when you initialize the snake), we’ll create a helper function.
  * 
@@ -237,6 +246,7 @@ pub fn snake_movement(
     segments: ResMut<SnakeSegments>,
     mut heads: Query<(Entity, &SnakeHead)>,
     mut positions: Query<&mut Position>,
+    mut last_tail_position: ResMut<LastTailPosition>,
 ) {
     if let Some((head_entity, head)) = heads.iter_mut().next() {
         let segment_positions = segments
@@ -265,6 +275,7 @@ pub fn snake_movement(
             .for_each(|(pos, segment)| {
                 *positions.get_mut(*segment).unwrap() = *pos;
             });
+        last_tail_position.0 = Some(*segment_positions.last().unwrap());
     }
 }
 
@@ -293,6 +304,20 @@ pub fn snake_eating(
                 growth_writer.send(GrowthEvent);
             }
         }
+    }
+}
+
+
+pub fn snake_growth(
+    commands: Commands,
+    last_tail_position: Res<LastTailPosition>,
+    mut segments: ResMut<SnakeSegments>,
+    mut growth_reader: EventReader<GrowthEvent>,
+) {
+    if growth_reader.iter().next().is_some() {
+        segments
+            .0
+            .push(spawn_segment(commands, last_tail_position.0.unwrap()));
     }
 }
 

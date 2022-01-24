@@ -18,6 +18,7 @@ pub mod snakemod;
         })
         .insert_resource(ClearColor(snakemod::CLEAR_COLOR))
         .insert_resource(snakemod::SnakeSegments::default())
+        .insert_resource(snakemod::LastTailPosition::default())
         .add_event::<snakemod::GrowthEvent>()
         .add_startup_system(snakemod::setup_camera)
         .add_startup_system(snakemod::spawn_snake)
@@ -51,7 +52,12 @@ pub mod snakemod;
                     snakemod::snake_eating
                         .label(snakemod::SnakeMovement::Eating)
                         .after(snakemod::SnakeMovement::Movement),
-                )                
+                )
+                .with_system(
+                    snakemod::snake_growth
+                        .label(snakemod::SnakeMovement::Growth)
+                        .after(snakemod::SnakeMovement::Eating),
+                )
         )
         /*
          * We don’t want this going off constantly. We want to spawn food 
