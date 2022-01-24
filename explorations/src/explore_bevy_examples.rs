@@ -20,6 +20,7 @@ pub mod snakemod;
         .insert_resource(snakemod::SnakeSegments::default())
         .insert_resource(snakemod::LastTailPosition::default())
         .add_event::<snakemod::GrowthEvent>()
+        .add_event::<snakemod::GameOverEvent>()
         .add_startup_system(snakemod::setup_camera)
         .add_startup_system(snakemod::spawn_snake)
         /*
@@ -59,6 +60,8 @@ pub mod snakemod;
                         .after(snakemod::SnakeMovement::Eating),
                 )
         )
+        // Add game_over system, and make sure it runs after Movement:
+        .add_system(snakemod::game_over.after(snakemod::SnakeMovement::Movement))
         /*
          * We don’t want this going off constantly. We want to spawn food 
          * every second, not every frame. Since this is a common need in 

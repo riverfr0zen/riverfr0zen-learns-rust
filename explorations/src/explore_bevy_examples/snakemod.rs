@@ -126,6 +126,9 @@ pub struct GrowthEvent;
 pub struct LastTailPosition(Option<Position>);
 
 
+pub struct GameOverEvent;
+
+
 /*
  * (From tut) Since we’re going to be spawning segments from a couple places (when you 
  * eat food and when you initialize the snake), we’ll create a helper function.
@@ -247,6 +250,11 @@ pub fn snake_movement(
     mut heads: Query<(Entity, &SnakeHead)>,
     mut positions: Query<&mut Position>,
     mut last_tail_position: ResMut<LastTailPosition>,
+    /*
+     * (From tut) In our snake_movement system, we want access to the game over 
+     * event, so we can send events:
+     */
+    mut game_over_writer: EventWriter<GameOverEvent>,
 ) {
     if let Some((head_entity, head)) = heads.iter_mut().next() {
         let segment_positions = segments
@@ -269,6 +277,16 @@ pub fn snake_movement(
                 head_pos.y -= 1;
             }
         };
+        /* 
+         * Alright, so we’ve got our snake_movement system sending game over events.
+         */
+        if head_pos.x < 0
+        || head_pos.y < 0
+        || head_pos.x as u32 >= ARENA_WIDTH
+        || head_pos.y as u32 >= ARENA_HEIGHT
+        {
+            game_over_writer.send(GameOverEvent);
+        }        
         segment_positions
             .iter()
             .zip(segments.0.iter().skip(1))
@@ -318,6 +336,28 @@ pub fn snake_growth(
         segments
             .0
             .push(spawn_segment(commands, last_tail_position.0.unwrap()));
+    }
+}
+
+
+/*
+ * (From tut) Let’s create a new system that listens for the game over events.
+ * 
+ * The cool thing here is that we can use the spawn_snake function directly. 
+ * It’s now being used as both a system and a helper function.
+ */
+pub fn game_over(
+    mut commands: Commands,
+    mut reader: EventReader<GameOverEvent>,
+    segments_res: ResMut<SnakeSegments>,
+    food: Query<Entity, With<Food>>,
+    segments: Query<Entity, With<SnakeSegment>>,
+) {
+    if reader.iter().next().is_some() {
+        for ent in food.iter().chain(segments.iter()) {
+            commands.entity(ent).despawn();
+        }
+        spawn_snake(commands, segments_res);
     }
 }
 
