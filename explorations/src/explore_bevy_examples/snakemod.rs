@@ -287,6 +287,15 @@ pub fn snake_movement(
         {
             game_over_writer.send(GameOverEvent);
         }        
+        /*
+         * For the final touch to round out our snake game, let’s add the bit of 
+         * logic we need to send a game over event when we hit our own tail, inside 
+         * the snake_movement system, right after the check for running out of 
+         * bounds:
+         */
+        if segment_positions.contains(&head_pos) {
+            game_over_writer.send(GameOverEvent);
+        }
         segment_positions
             .iter()
             .zip(segments.0.iter().skip(1))
