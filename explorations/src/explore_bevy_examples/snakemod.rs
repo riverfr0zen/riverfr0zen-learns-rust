@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use rand::prelude::random;
 
-pub const WINDOW_WIDTH: f32 = 500.0;
-pub const WINDOW_HEIGHT: f32 = 500.0;
+pub const WINDOW_WIDTH: f32 = 1600.0;
+pub const WINDOW_HEIGHT: f32 = 1600.0;
 pub const CLEAR_COLOR: Color = Color::rgb(0.04, 0.04, 0.04);
 const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
 const FOOD_SIZE: f32 = 0.8;
@@ -11,11 +11,9 @@ const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
 const SNAKE_HEAD_SIZE: f32 = 0.8;
 const SNAKE_SEGMENT_COLOR: Color = Color::rgb(0.3, 0.3, 0.3);
 const SNAKE_SEGMENT_SIZE: f32 = 0.65;
-// pub const SNAKE_SPEED: f64 = 0.150;
-// pub const SNAKE_STEP: f64 = 0.150;
-pub const SNAKE_STEP: f64 = 0.150;
-const ARENA_WIDTH: u32 = 10;
-const ARENA_HEIGHT: u32 = 10;
+pub const SNAKE_STEP: f64 = 0.05;
+const ARENA_WIDTH: u32 = 80;
+const ARENA_HEIGHT: u32 = 80;
 
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
