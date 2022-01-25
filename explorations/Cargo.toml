@@ -6,5 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.6"
 rand = "0.7.3"
+#
+# WARNING: The dynamic linking feature of Bevy that is enabled below
+# speeds up compilation time during dev, but should be removed before 
+# compiling for release. "Otherwise you will need to include 
+# libbevy_dylib alongside your game if you want it to run" 
+# (See https://bevyengine.org/learn/book/getting-started/setup/)
+#
+bevy = { version = "0.6.0", features = ["dynamic"] }

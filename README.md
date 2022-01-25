@@ -92,6 +92,13 @@ I committed the entire `rust-learning` workspace [to Bitbucket](https://bitbucke
 One benefit of using this workspace structure is that it simplifies my [debug config in VSCode](https://bitbucket.org/riverfr0zen/rust-learning/src/master/.vscode/launch.json). 
 
 
+## Enabling fast compiles on Bevy projects
+
+Several methods to speed up compilation are listed at this [resource](https://bevyengine.org/learn/book/getting-started/setup/). So far, I have implemented the following:
+
+* Enable Bevy's Dynamic Linking Feature (See [explorations Cargo.toml](explorations/Cargo.toml))
+
+There are additional things that can be done, but so far this has been enough for me. Maybe as my projects become more complex I can revisit.
 
 # Issues log
  
