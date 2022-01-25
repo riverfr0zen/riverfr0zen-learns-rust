@@ -26,10 +26,76 @@ In addition the following was added to `.vscode/settings.json` to format code on
 
 See also the [Bevy exploration README](explore-bevy-book/README.md) for other installation requirements.
 
+
+# Further details around dev environment and tooling 
+
+Below pulled from my project for learning Rust w/ Bevy.
+
+
+## Rust core tooling
  
- # Issues log
+### rustup
+
+`rustup` is the primary management toolchain for Rust, and the [install page is here](https://www.rust-lang.org/tools/install).
  
- ## Upgrading to Bevy 0.6
+ `rustup self update` updates rustup itself
+ 
+ `rustup update` will update the Rust installation
+
+### cargo
+
+[cargo](https://doc.rust-lang.org/cargo/index.html) is the Rust package manager
+
+`cargo new hello_world` start a new package called hello_world
+
+```Cargo defaults to `--bin` to make a binary program. To make a library, we would pass `--lib`, instead.```
+
+
+`cargo build` build the project, which (if a binary crate) can then be run at `./target/debug/hello_world`
+
+`cargo run` build and run the project in one go
+
+`cargo update` update dependencies
+
+
+## Rust language server choice & VSCode extension
+
+[RLS](https://github.com/rust-lang/rls) VS [rust-analyzer](https://rust-analyzer.github.io/) 
+
+Based on [this thread](https://www.reddit.com/r/rust/comments/lur37d/why_is_rls_still_so_bad/) and [this thread](https://www.reddit.com/r/rust/comments/hf07lk/rls_vs_rustanalyzer_in_2020/) I will go with `rust-analyzer`.
+
+This decision also impacts choice of VSCode extension -- according to discussion in the threads above, if using `rust-analyzer`, one shouldn't have the default Rust VSCode extension running (conflicts and slowdown).
+
+In addition, I also installed the [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) debugger that I had seen recommended for Rust projects in VSCode. See [debug config in VSCode](https://bitbucket.org/riverfr0zen/rust-learning/src/master/.vscode/launch.json).
+
+
+Some articles that contributed to my setup:
+
+* https://dev.to/cthutu/rust-1-creating-your-development-environment-55bi
+* https://levelup.gitconnected.com/rust-with-visual-studio-code-46404befed8
+* https://devjunhong.github.io/rust/Rust-step-by-step-debugger/#seventh
+* https://github.com/vadimcn/vscode-lldb/blob/master/MANUAL.md#cargo-support    
+
+
+## Code organization
+
+### Workspace for rust-learning
+
+https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html
+
+I already had a `/rust` folder containing a `hello-rust` package from a previous attempt. Upon reading about workspaces at the link above, it made sense then to make the `/rust` folder a "workspace" that can contain various learning projects (as packages). 
+
+I renamed `/rust` to `/rust-learning` and created the necessary Cargo.toml file. Within this workspace, I can add upcoming projects, such as `explore-bevy-book` (learning Bevy) as `packages`.
+
+I committed the entire `rust-learning` workspace [to Bitbucket](https://bitbucket.org/riverfr0zen/rust-learning)
+
+One benefit of using this workspace structure is that it simplifies my [debug config in VSCode](https://bitbucket.org/riverfr0zen/rust-learning/src/master/.vscode/launch.json). 
+
+
+
+# Issues log
+ 
+## Upgrading to Bevy 0.6
 
 Was getting an error such as this:
 
