@@ -29,11 +29,17 @@ pub fn path_eg_setup(mut commands: Commands) {
     path_builder.move_to(Vec2::ZERO);
     path_builder.line_to(100.0 * Vec2::ONE);
     /*
-     * Temporary workaround until the fix mentioned in this issue is released:
+     * Irf: Temporary workaround until the fix mentioned in this issue is released:
      * https://github.com/Nilirad/bevy_prototype_lyon/issues/138
      */ 
     // let line = path_builder.build();
     let line = path_builder.build().0;
+
+    let mut path_builder = PathBuilder::new();
+    path_builder.move_to(Vec2::ZERO);
+    path_builder.line_to(Vec2::new(100.0, 0.0));
+    let line2 = path_builder.build().0;
+
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
     commands.spawn_bundle(GeometryBuilder::build_as(
@@ -41,4 +47,10 @@ pub fn path_eg_setup(mut commands: Commands) {
         DrawMode::Stroke(StrokeMode::new(Color::BLACK, 10.0)),
         Transform::default(),
     ));
+    commands.spawn_bundle(GeometryBuilder::build_as(
+        &line2,
+        DrawMode::Stroke(StrokeMode::new(Color::RED, 10.0)),
+        Transform::default(),
+    ));
+
 }
