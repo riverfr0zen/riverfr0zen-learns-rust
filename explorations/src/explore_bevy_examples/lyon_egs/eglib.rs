@@ -21,9 +21,6 @@ pub fn eg1_setup(mut commands: Commands) {
 }
 
 
-// GeometryBuilder::new().add(&PathBuilder::new().build().0);
-
-
 pub fn path_eg_setup(mut commands: Commands) {
     let mut path_builder = PathBuilder::new();
     path_builder.move_to(Vec2::ZERO);
