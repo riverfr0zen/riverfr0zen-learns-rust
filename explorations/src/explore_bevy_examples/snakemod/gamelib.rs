@@ -8,12 +8,15 @@ const FOOD_COLOR: Color = Color::rgb(1.0, 0.0, 1.0);
 const FOOD_SIZE: f32 = 0.8;
 pub const FOOD_STEP: f64 = 1.0;
 const SNAKE_HEAD_COLOR: Color = Color::rgb(0.7, 0.7, 0.7);
-const SNAKE_HEAD_SIZE: f32 = 0.8;
+// Obviously if the snake head (or any component) is > 1.0, then it's 
+// position can spill over grid blocks (e.g. the snake can be moved 
+// onto intersections of grid blocks)
+const SNAKE_HEAD_SIZE: f32 = 1.0;
 const SNAKE_SEGMENT_COLOR: Color = Color::rgb(0.3, 0.3, 0.3);
-const SNAKE_SEGMENT_SIZE: f32 = 0.65;
+const SNAKE_SEGMENT_SIZE: f32 = 0.8;
 pub const SNAKE_STEP: f64 = 0.05;
-const ARENA_WIDTH: u32 = 80;
-const ARENA_HEIGHT: u32 = 80;
+const ARENA_WIDTH: u32 = 50;
+const ARENA_HEIGHT: u32 = 50;
 
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
