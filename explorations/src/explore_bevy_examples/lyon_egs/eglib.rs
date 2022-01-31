@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use bevy_prototype_lyon::shapes::Circle;
 use rand::Rng;
 use rand::prelude::thread_rng;
 
@@ -49,8 +50,9 @@ pub fn path_eg_setup(mut commands: Commands) {
 
 pub const SHIFTY_CIRCLE_RADIUS: f32 = 100.0;
 pub const SHIFTY_CIRCLE_STROKE: f32 = 1.0;
-pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
 pub const SHIFTY_CIRCLE_SPEED: f32 = 1.0; // I.e. how much it translates per step
+pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
+pub const SHIFTY_CHANGE_STEP: f64 = 0.1;
 pub const WINDOW_HEIGHT: f32 = 1600.0;
 pub const WINDOW_WIDTH: f32 = 1600.0;
 
@@ -63,9 +65,18 @@ pub fn setup_shifty_circle(mut commands: Commands) {
     let mut rng = thread_rng();
     let mycircle = shapes::Circle {
         radius: SHIFTY_CIRCLE_RADIUS,
-        center: Vec2::new(
-            rng.gen_range(-WINDOW_WIDTH/2.0..WINDOW_WIDTH/2.0), 
-            rng.gen_range(-WINDOW_HEIGHT/2.0..WINDOW_HEIGHT/2.0)),
+        // I thought this could be a way to start the circle in a random
+        // position, but found out what this does is set the center of
+        // the circle **in the world**. Any future translations would
+        // be based off this random center. Of, course that isn't what
+        // I wanted. (What I wanted is in fact actually achieved in the 
+        // first cycle of the`change_circle_destination` system).
+        //
+        // center: Vec2::new(
+        //     rng.gen_range(-WINDOW_WIDTH/2.0..WINDOW_WIDTH/2.0), 
+        //     rng.gen_range(-WINDOW_HEIGHT/2.0..WINDOW_HEIGHT/2.0)),
+        ..Default::default()
+
     };
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
@@ -88,6 +99,24 @@ pub fn translate_circle(mut q: Query<&mut Transform, With<ShiftyCircle>>) {
         // println!("{}", transform.translation.x);
         transform.translation.x += SHIFTY_CIRCLE_SPEED;
         transform.translation.y += SHIFTY_CIRCLE_SPEED / 2.0;
+    }
+
+}
+
+
+pub fn change_circle_destination(mut q: Query<&mut Transform, With<ShiftyCircle>>) {
+
+    let mut rng = thread_rng();
+    for mut transform in q.iter_mut() {
+        transform.translation.x = rng.gen_range(
+            -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS..WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS
+        );
+        transform.translation.y = rng.gen_range(
+            -WINDOW_HEIGHT/2.0+SHIFTY_CIRCLE_RADIUS..WINDOW_HEIGHT/2.0-SHIFTY_CIRCLE_RADIUS
+        );
+        println!("x: {}", transform.translation.x);
+        println!("y: {}", transform.translation.y);
+        println!("---");
     }
 
 }

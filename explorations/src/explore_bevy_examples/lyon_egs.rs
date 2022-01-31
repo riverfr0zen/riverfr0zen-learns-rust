@@ -44,6 +44,9 @@ pub fn shifty_circle_app() {
         .add_system(
             eglib::translate_circle
                 .with_run_criteria(FixedTimestep::step(eglib::SHIFTY_CIRCLE_STEP)))
+        .add_system(
+            eglib::change_circle_destination
+                .with_run_criteria(FixedTimestep::step(eglib::SHIFTY_CHANGE_STEP)))
         .run();
 }
 
