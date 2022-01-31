@@ -43,9 +43,7 @@ pub fn shifty_circle_app() {
         // (Found it here: https://bevy-cheatbook.github.io/programming/run-criteria.html#run-criteria-labels)
         .add_system(
             eglib::translate_circle
-                .with_run_criteria(
-                    FixedTimestep::step(eglib::SHIFTY_CIRCLE_STEP)
-                ))
+                .with_run_criteria(FixedTimestep::step(eglib::SHIFTY_CIRCLE_STEP)))
         .run();
 }
 

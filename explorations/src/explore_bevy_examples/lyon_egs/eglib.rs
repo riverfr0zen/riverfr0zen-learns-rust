@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use rand::prelude::random;
 
 
 pub fn eg1_setup(mut commands: Commands) {

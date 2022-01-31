@@ -1,6 +1,8 @@
 Lyon Exploration todos:
 
-* [ ] Make a drawn shape move (i.e. implement a system that accesses a shape's Transform, which is added in the setup systems)
+* [x] Make a drawn shape move (i.e. implement a system that accesses a shape's Transform, which is added in the setup systems)
+
+* [ ] Bonus to moving shape: Make shifty circle really shifty, like a UFO
 
 * [ ] Make a path move, similar to above
 

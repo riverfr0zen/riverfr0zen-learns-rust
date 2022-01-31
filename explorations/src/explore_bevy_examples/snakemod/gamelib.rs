@@ -18,6 +18,7 @@ pub const SNAKE_STEP: f64 = 0.05;
 const ARENA_WIDTH: u32 = 50;
 const ARENA_HEIGHT: u32 = 50;
 
+
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 }
