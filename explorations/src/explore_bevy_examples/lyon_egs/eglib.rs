@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use rand::prelude::random;
+use rand::Rng;
+use rand::prelude::thread_rng;
 
 
 pub fn eg1_setup(mut commands: Commands) {
@@ -46,9 +47,6 @@ pub fn path_eg_setup(mut commands: Commands) {
 }
 
 
-#[derive(Component)]
-pub struct ShiftyCircle;
-
 pub const SHIFTY_CIRCLE_RADIUS: f32 = 100.0;
 pub const SHIFTY_CIRCLE_STROKE: f32 = 1.0;
 pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
@@ -56,10 +54,18 @@ pub const SHIFTY_CIRCLE_SPEED: f32 = 1.0; // I.e. how much it translates per ste
 pub const WINDOW_HEIGHT: f32 = 1600.0;
 pub const WINDOW_WIDTH: f32 = 1600.0;
 
+
+#[derive(Component)]
+pub struct ShiftyCircle;
+
+
 pub fn setup_shifty_circle(mut commands: Commands) {
+    let mut rng = thread_rng();
     let mycircle = shapes::Circle {
         radius: SHIFTY_CIRCLE_RADIUS,
-         ..Default::default()       
+        center: Vec2::new(
+            rng.gen_range(-WINDOW_WIDTH/2.0..WINDOW_WIDTH/2.0), 
+            rng.gen_range(-WINDOW_HEIGHT/2.0..WINDOW_HEIGHT/2.0)),
     };
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
