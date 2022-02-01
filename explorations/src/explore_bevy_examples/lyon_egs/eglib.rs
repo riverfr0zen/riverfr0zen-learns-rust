@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use rand::Rng;
+use rand::prelude::thread_rng;
+
 
 
 pub fn eg1_setup(mut commands: Commands) {
@@ -72,6 +75,7 @@ pub fn path_changing_eg_setup(mut commands: Commands) {
 pub const CHANGER_STEP: f64 = 1.0;
 
 pub fn path_changer(mut query: Query<&mut Path>) {
+
     // let mut path_builder = PathBuilder::new();
     // path_builder.move_to(Vec2::ZERO);
     // path_builder.line_to(100.0 * Vec2::ONE);
@@ -80,8 +84,9 @@ pub fn path_changer(mut query: Query<&mut Path>) {
     // path_builder.close();
     // let new_path = path_builder.build().0;
 
+    let mut rng = thread_rng();
     let polygon = shapes::RegularPolygon {
-        sides: 6,
+        sides: rng.gen_range(3..8),
         feature: shapes::RegularPolygonFeature::Radius(200.0),
         ..shapes::RegularPolygon::default()
     };
