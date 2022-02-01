@@ -35,6 +35,7 @@ pub fn shifty_circle_app() {
             height: eglib::WINDOW_HEIGHT,
             ..Default::default()
         })
+        .insert_resource(ClearColor(eglib::CLEAR_COLOR))
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_plugin(ShapePlugin)

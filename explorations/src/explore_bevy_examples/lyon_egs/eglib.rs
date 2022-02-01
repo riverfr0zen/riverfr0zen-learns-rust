@@ -47,14 +47,19 @@ pub fn path_eg_setup(mut commands: Commands) {
 }
 
 
+// pub const WINDOW_WIDTH: f32 = 3200.0;
+// pub const WINDOW_HEIGHT: f32 = 2400.0;
 pub const WINDOW_WIDTH: f32 = 1600.0;
 pub const WINDOW_HEIGHT: f32 = 1600.0;
 pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
 pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
+pub const CLEAR_COLOR: Color = Color::MIDNIGHT_BLUE;
 const SHIFTY_CIRCLE_RADIUS: f32 = 100.0;
 const SHIFTY_CIRCLE_STROKE: f32 = 5.0;
-const SHIFTY_CIRCLE_MIN_SPEED: f32 = 0.1; // I.e. how much it translates per step
-const SHIFTY_CIRCLE_MAX_SPEED: f32 = 50.0; // I.e. how much it translates per step
+const SHIFTY_CIRCLE_MIN_SPEED: f32 = 0.1;
+const SHIFTY_CIRCLE_MAX_SPEED: f32 = 50.0;
+const SHIFTY_CIRCLE_FILL_COLOR: Color = Color::rgba(0.0, 1.0, 0.0, 0.2);
+const SHIFTY_CIRCLE_STROKE_COLOR: Color = Color::ORANGE;
 const DEST_LOW_X: f32 = -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS;
 const DEST_HIGH_X: f32 = WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS;
 const DEST_LOW_Y: f32 = -WINDOW_HEIGHT/2.0+SHIFTY_CIRCLE_RADIUS;
@@ -96,8 +101,8 @@ pub fn setup_shifty_circle(mut commands: Commands) {
     commands.spawn_bundle(GeometryBuilder::build_as(
         &mycircle,
         DrawMode::Outlined {
-            fill_mode: FillMode::color(Color::rgba(0.0, 1.0, 0.0, 1.0)),
-            outline_mode: StrokeMode::new(Color::BLACK, SHIFTY_CIRCLE_STROKE),
+            fill_mode: FillMode::color(SHIFTY_CIRCLE_FILL_COLOR),
+            outline_mode: StrokeMode::new(SHIFTY_CIRCLE_STROKE_COLOR, SHIFTY_CIRCLE_STROKE),
         },
         Transform::default(),
     ))
