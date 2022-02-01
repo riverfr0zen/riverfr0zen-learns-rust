@@ -59,6 +59,8 @@ pub fn path_eg_setup(mut commands: Commands) {
 
 pub const CHANGER_WINDOW_WIDTH: f32 = 1600.0;
 pub const CHANGER_WINDOW_HEIGHT: f32 = 1600.0;
+// pub const CHANGER_WINDOW_WIDTH: f32 = 3200.0;
+// pub const CHANGER_WINDOW_HEIGHT: f32 = 2400.0;
 pub const CHANGER_STEP: f64 = 1.0;
 pub const CHANGER_CLEAR_CLR: Color = Color::DARK_GREEN;
 const CHANGER_FILL_CLR: Color = Color::ORANGE;
@@ -103,7 +105,9 @@ pub fn path_changer(mut query: Query<&mut Path>) {
     let mut path_builder = PathBuilder::new();
     path_builder.move_to(Vec2::ZERO);
 
-    for i in 0..num_segments {
+    // @HINT
+    // Using an underscore to discard the iterator value since it's not being used
+    for _i in 0..num_segments {
         path_builder.line_to(Vec2::new(
             rng.gen_range(-CHANGER_COORDS_WIDTH..CHANGER_COORDS_WIDTH),
             rng.gen_range(-CHANGER_COORDS_HEIGHT..CHANGER_COORDS_HEIGHT)
