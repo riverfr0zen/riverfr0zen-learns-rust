@@ -58,6 +58,13 @@ pub fn shifty_circle_app() {
 pub fn lyon_path_changing_eg_app() {
     // From https://github.com/Nilirad/bevy_prototype_lyon/blob/master/examples/path.rs
     App::new()
+        .insert_resource(WindowDescriptor {
+            title: "Shifty Circle".to_string(),
+            width: eglib::CHANGER_WINDOW_WIDTH,
+            height: eglib::CHANGER_WINDOW_HEIGHT,
+            ..Default::default()
+        })
+        .insert_resource(ClearColor(eglib::CHANGER_CLEAR_CLR))
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_plugin(ShapePlugin)
