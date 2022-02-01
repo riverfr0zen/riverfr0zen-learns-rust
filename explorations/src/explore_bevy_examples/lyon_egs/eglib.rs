@@ -47,13 +47,14 @@ pub fn path_eg_setup(mut commands: Commands) {
 }
 
 
-pub const WINDOW_WIDTH: f32 = 2400.0;
+pub const WINDOW_WIDTH: f32 = 1600.0;
 pub const WINDOW_HEIGHT: f32 = 1600.0;
 pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
 pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
 const SHIFTY_CIRCLE_RADIUS: f32 = 100.0;
 const SHIFTY_CIRCLE_STROKE: f32 = 5.0;
-const SHIFTY_CIRCLE_SPEED: f32 = 50.0; // I.e. how much it translates per step
+const SHIFTY_CIRCLE_MIN_SPEED: f32 = 0.1; // I.e. how much it translates per step
+const SHIFTY_CIRCLE_MAX_SPEED: f32 = 50.0; // I.e. how much it translates per step
 const DEST_LOW_X: f32 = -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS;
 const DEST_HIGH_X: f32 = WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS;
 const DEST_LOW_Y: f32 = -WINDOW_HEIGHT/2.0+SHIFTY_CIRCLE_RADIUS;
@@ -69,6 +70,7 @@ pub struct ShiftyCircle;
 pub struct Destination {
     x: f32,
     y: f32,
+    speed: f32,
 }
 
 
@@ -100,24 +102,24 @@ pub fn setup_shifty_circle(mut commands: Commands) {
         Transform::default(),
     ))
     .insert(ShiftyCircle)
-    .insert(Destination { x: 0.0, y: 0.0 });
+    .insert(Destination { x: 0.0, y: 0.0, speed: SHIFTY_CIRCLE_MIN_SPEED });
 }
 
 
 pub fn translate_circle(mut q: Query<(&mut Transform, &Destination)>) {
     for (mut transform, dest) in q.iter_mut() {
         if dest.x > transform.translation.x {
-            transform.translation.x += SHIFTY_CIRCLE_SPEED;
+            transform.translation.x += dest.speed;
         }
         if dest.x < transform.translation.x {
-            transform.translation.x -= SHIFTY_CIRCLE_SPEED;
+            transform.translation.x -= dest.speed;
         }
 
         if dest.y > transform.translation.y {
-            transform.translation.y += SHIFTY_CIRCLE_SPEED;
+            transform.translation.y += dest.speed;
         }
         if dest.y < transform.translation.y {
-            transform.translation.y -= SHIFTY_CIRCLE_SPEED;
+            transform.translation.y -= dest.speed;
         }
     }
 
@@ -125,13 +127,14 @@ pub fn translate_circle(mut q: Query<(&mut Transform, &Destination)>) {
 
 
 pub fn change_circle_destination(mut q: Query<&mut Destination, With<ShiftyCircle>>) {
-
     let mut rng = thread_rng();
     for mut dest in q.iter_mut() {
         dest.x = rng.gen_range(DEST_LOW_X..DEST_HIGH_X);
         dest.y = rng.gen_range(DEST_LOW_Y..DEST_HIGH_Y);
+        dest.speed = rng.gen_range(SHIFTY_CIRCLE_MIN_SPEED..SHIFTY_CIRCLE_MAX_SPEED);
         // println!("x: {}", dest.x);
         // println!("y: {}", dest.y);
+        // println!("speed: {}", dest.speed);
         // println!("---");
     }
 
