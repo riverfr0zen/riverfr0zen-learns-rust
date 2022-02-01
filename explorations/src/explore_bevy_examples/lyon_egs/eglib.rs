@@ -47,13 +47,17 @@ pub fn path_eg_setup(mut commands: Commands) {
 }
 
 
-pub const SHIFTY_CIRCLE_RADIUS: f32 = 100.0;
-pub const SHIFTY_CIRCLE_STROKE: f32 = 1.0;
-pub const SHIFTY_CIRCLE_SPEED: f32 = 50.0; // I.e. how much it translates per step
-pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
-pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
 pub const WINDOW_WIDTH: f32 = 2400.0;
 pub const WINDOW_HEIGHT: f32 = 1600.0;
+pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
+pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
+const SHIFTY_CIRCLE_RADIUS: f32 = 100.0;
+const SHIFTY_CIRCLE_STROKE: f32 = 5.0;
+const SHIFTY_CIRCLE_SPEED: f32 = 50.0; // I.e. how much it translates per step
+const DEST_LOW_X: f32 = -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS;
+const DEST_HIGH_X: f32 = WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS;
+const DEST_LOW_Y: f32 = -WINDOW_HEIGHT/2.0+SHIFTY_CIRCLE_RADIUS;
+const DEST_HIGH_Y: f32 = WINDOW_HEIGHT/2.0-SHIFTY_CIRCLE_RADIUS;
 
 
 #[derive(Component)]
@@ -91,7 +95,7 @@ pub fn setup_shifty_circle(mut commands: Commands) {
         &mycircle,
         DrawMode::Outlined {
             fill_mode: FillMode::color(Color::rgba(0.0, 1.0, 0.0, 1.0)),
-            outline_mode: StrokeMode::new(Color::BLACK, 5.0),
+            outline_mode: StrokeMode::new(Color::BLACK, SHIFTY_CIRCLE_STROKE),
         },
         Transform::default(),
     ))
@@ -124,12 +128,8 @@ pub fn change_circle_destination(mut q: Query<&mut Destination, With<ShiftyCircl
 
     let mut rng = thread_rng();
     for mut dest in q.iter_mut() {
-        dest.x = rng.gen_range(
-            -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS..WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS
-        );
-        dest.y = rng.gen_range(
-            -WINDOW_HEIGHT/2.0+SHIFTY_CIRCLE_RADIUS..WINDOW_HEIGHT/2.0-SHIFTY_CIRCLE_RADIUS
-        );
+        dest.x = rng.gen_range(DEST_LOW_X..DEST_HIGH_X);
+        dest.y = rng.gen_range(DEST_LOW_Y..DEST_HIGH_Y);
         // println!("x: {}", dest.x);
         // println!("y: {}", dest.y);
         // println!("---");
