@@ -64,7 +64,9 @@ pub const CHANGER_CLEAR_CLR: Color = Color::DARK_GREEN;
 const CHANGER_FILL_CLR: Color = Color::ORANGE;
 const CHANGER_STROKE_CLR: Color = Color::BLACK;
 const CHANGER_STROKE: f32 = 10.0;
-
+const CHANGER_COORDS_WIDTH: f32 = CHANGER_WINDOW_WIDTH/2.0;
+const CHANGER_COORDS_HEIGHT: f32 = CHANGER_WINDOW_HEIGHT/2.0;
+const CHANGER_MAX_SEGMENTS: u8 = 8;
 
 pub fn path_changing_eg_setup(mut commands: Commands) {
     let mut path_builder = PathBuilder::new();
@@ -96,25 +98,19 @@ pub fn path_changing_eg_setup(mut commands: Commands) {
 
 pub fn path_changer(mut query: Query<&mut Path>) {
     let mut rng = thread_rng();
-    
+
+    let num_segments = rng.gen_range(2..CHANGER_MAX_SEGMENTS);
     let mut path_builder = PathBuilder::new();
     path_builder.move_to(Vec2::ZERO);
-    path_builder.line_to(Vec2::new(
-        rng.gen_range(-CHANGER_WINDOW_WIDTH/2.0..CHANGER_WINDOW_WIDTH/2.0),
-        rng.gen_range(-CHANGER_WINDOW_HEIGHT/2.0..CHANGER_WINDOW_HEIGHT/2.0)
-    ));
-    path_builder.line_to(Vec2::new(
-        rng.gen_range(-CHANGER_WINDOW_WIDTH/2.0..CHANGER_WINDOW_WIDTH/2.0),
-        rng.gen_range(-CHANGER_WINDOW_HEIGHT/2.0..CHANGER_WINDOW_HEIGHT/2.0)
-    ));
+
+    for i in 0..num_segments {
+        path_builder.line_to(Vec2::new(
+            rng.gen_range(-CHANGER_COORDS_WIDTH..CHANGER_COORDS_WIDTH),
+            rng.gen_range(-CHANGER_COORDS_HEIGHT..CHANGER_COORDS_HEIGHT)
+        ));
+    }
     path_builder.close();
     let new_path = path_builder.build().0;
-
-    // let new_path = shapes::RegularPolygon {
-    //     sides: rng.gen_range(3..8),
-    //     feature: shapes::RegularPolygonFeature::Radius(200.0),
-    //     ..shapes::RegularPolygon::default()
-    // };
 
     let mut path = query.iter_mut().next().unwrap();
     *path = ShapePath::build_as(&new_path);
