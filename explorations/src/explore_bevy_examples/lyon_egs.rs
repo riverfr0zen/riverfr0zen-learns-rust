@@ -55,3 +55,15 @@ pub fn shifty_circle_app() {
 }
 
 
+pub fn lyon_path_changing_eg_app() {
+    // From https://github.com/Nilirad/bevy_prototype_lyon/blob/master/examples/path.rs
+    App::new()
+        .insert_resource(Msaa { samples: 4 })
+        .add_plugins(DefaultPlugins)
+        .add_plugin(ShapePlugin)
+        .add_startup_system(eglib::path_changing_eg_setup)
+        .add_system(
+            eglib::path_changer
+                .with_run_criteria(FixedTimestep::step(eglib::CHANGER_STEP)))
+        .run();
+}
