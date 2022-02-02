@@ -134,64 +134,46 @@ pub const CURVE_STEP: f64 = 1.0;
 pub const CURVE_CLEAR_CLR: Color = Color::DARK_GRAY;
 const CURVE_FILL_CLR: Color = Color::ORANGE;
 const CURVE_STROKE_CLR: Color = Color::WHITE;
-const CURVE_STROKE: f32 = 10.0;
-const CURVE_COORDS_WIDTH: f32 = CURVE_WINDOW_WIDTH/2.0;
-const CURVE_COORDS_HEIGHT: f32 = CURVE_WINDOW_HEIGHT/2.0;
+const CURVE_STROKE: f32 = 5.0;
 
+const CURVE_CTRL_X: f32 = 200.0;
+const CURVE_CTRL_Y: f32 = 200.0;
+const CURVE_VALLEY_RADIUS: f32 = 100.0; // Radius to curve intersection
 
 pub fn curve_eg_setup(mut commands: Commands) {
     let mut path_builder = PathBuilder::new();
-    let start_location = Vec2::ZERO;
 
     // Right side top
-    path_builder.move_to(start_location);
+    path_builder.move_to(Vec2::new(0.0, CURVE_VALLEY_RADIUS));
     path_builder.quadratic_bezier_to(
-        Vec2::new(100.0, 200.0), 
-        Vec2::new(200.0, 0.0)
+        Vec2::new(CURVE_CTRL_X, CURVE_CTRL_Y), 
+        Vec2::new(CURVE_VALLEY_RADIUS, 0.0)
     );
 
     // Right side bottom
-    path_builder.move_to(start_location);
     path_builder.quadratic_bezier_to(
-        Vec2::new(100.0, -200.0), 
-        Vec2::new(200.0, 0.0)
-    );
-
-    // Left side top    
-    path_builder.move_to(start_location);
-    path_builder.quadratic_bezier_to(
-        Vec2::new(-100.0, 200.0), 
-        Vec2::new(-200.0, 0.0)
+        Vec2::new(CURVE_CTRL_X, -CURVE_CTRL_Y), 
+        Vec2::new(0.0, -CURVE_VALLEY_RADIUS)
     );
 
     // Left side bottom
-    path_builder.move_to(start_location);
     path_builder.quadratic_bezier_to(
-        Vec2::new(-100.0, -200.0), 
-        Vec2::new(-200.0, 0.0)
+        Vec2::new(-CURVE_CTRL_X, -CURVE_CTRL_Y), 
+        Vec2::new(-CURVE_VALLEY_RADIUS, 0.0)
     );
-  
 
-    // path_builder.line_to(Vec2::new(start_location.x, CURVE_HEART_BOTTOM));
-    // path_builder.line_to(Vec2::new(-
-    //     CURVE_COORDS_WIDTH + CURVE_COORDS_WIDTH / 6.0, 
-    //     CURVE_HEART_CREST_START
-    // ));
-    // path_builder.quadratic_bezier_to(
-    //     Vec2::new(-CURVE_COORDS_WIDTH / 2.0, CURVE_HEART_PEAK), start_location
-    // );
-    // path_builder.close();
+    // Left side top
+    path_builder.quadratic_bezier_to(
+        Vec2::new(-CURVE_CTRL_X, CURVE_CTRL_Y), 
+        Vec2::new(0.0, CURVE_VALLEY_RADIUS)
+    );
+    path_builder.close();
 
-    /*
-     * Irf: Temporary workaround until the fix mentioned in this issue is released:
-     * https://github.com/Nilirad/bevy_prototype_lyon/issues/138
-     */ 
-    // let line = path_builder.build();
-    let line = path_builder.build().0;
+    let path = path_builder.build().0;
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
     commands.spawn_bundle(GeometryBuilder::build_as(
-        &line,
+        &path,
         // DrawMode::Stroke(StrokeMode::new(Color::BLACK, 10.0)),
         DrawMode::Outlined {
             fill_mode: FillMode::color(CURVE_FILL_CLR),
