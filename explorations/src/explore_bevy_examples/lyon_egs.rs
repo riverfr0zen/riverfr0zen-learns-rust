@@ -90,9 +90,6 @@ pub fn lyon_curve_eg_app() {
         .add_plugins(DefaultPlugins)
         .add_plugin(ShapePlugin)
         .add_startup_system(eglib::curve_eg_setup)
-        // .add_system(
-        //     eglib::path_changer
-        //         .with_run_criteria(FixedTimestep::step(eglib::CURVE_STEP)))
         .run();
 }
 

@@ -137,29 +137,50 @@ const CURVE_STROKE_CLR: Color = Color::WHITE;
 const CURVE_STROKE: f32 = 10.0;
 const CURVE_COORDS_WIDTH: f32 = CURVE_WINDOW_WIDTH/2.0;
 const CURVE_COORDS_HEIGHT: f32 = CURVE_WINDOW_HEIGHT/2.0;
-const CURVE_MAX_SEGMENTS: u8 = 8;
-const CURVE_HEART_CREST_START: f32 = CURVE_COORDS_HEIGHT / 4.0; // Where the mounds start
-const CURVE_HEART_BOTTOM: f32 = -CURVE_COORDS_HEIGHT + CURVE_COORDS_HEIGHT / 6.0;
-const CURVE_HEART_PEAK: f32 = CURVE_WINDOW_HEIGHT - CURVE_WINDOW_HEIGHT / 4.0;
+
 
 pub fn curve_eg_setup(mut commands: Commands) {
     let mut path_builder = PathBuilder::new();
-    let start_location = Vec2::new(0.0, CURVE_HEART_CREST_START);
+    let start_location = Vec2::ZERO;
+
+    // Right side top
     path_builder.move_to(start_location);
     path_builder.quadratic_bezier_to(
-        Vec2::new(CURVE_COORDS_WIDTH / 2.0, CURVE_HEART_PEAK), 
-        Vec2::new(CURVE_COORDS_WIDTH - CURVE_COORDS_WIDTH / 6.0, CURVE_HEART_CREST_START)
+        Vec2::new(100.0, 200.0), 
+        Vec2::new(200.0, 0.0)
     );
 
-    path_builder.line_to(Vec2::new(start_location.x, CURVE_HEART_BOTTOM));
-    path_builder.line_to(Vec2::new(-
-        CURVE_COORDS_WIDTH + CURVE_COORDS_WIDTH / 6.0, 
-        CURVE_HEART_CREST_START
-    ));
+    // Right side bottom
+    path_builder.move_to(start_location);
     path_builder.quadratic_bezier_to(
-        Vec2::new(-CURVE_COORDS_WIDTH / 2.0, CURVE_HEART_PEAK), start_location
+        Vec2::new(100.0, -200.0), 
+        Vec2::new(200.0, 0.0)
     );
-    path_builder.close();
+
+    // Left side top    
+    path_builder.move_to(start_location);
+    path_builder.quadratic_bezier_to(
+        Vec2::new(-100.0, 200.0), 
+        Vec2::new(-200.0, 0.0)
+    );
+
+    // Left side bottom
+    path_builder.move_to(start_location);
+    path_builder.quadratic_bezier_to(
+        Vec2::new(-100.0, -200.0), 
+        Vec2::new(-200.0, 0.0)
+    );
+  
+
+    // path_builder.line_to(Vec2::new(start_location.x, CURVE_HEART_BOTTOM));
+    // path_builder.line_to(Vec2::new(-
+    //     CURVE_COORDS_WIDTH + CURVE_COORDS_WIDTH / 6.0, 
+    //     CURVE_HEART_CREST_START
+    // ));
+    // path_builder.quadratic_bezier_to(
+    //     Vec2::new(-CURVE_COORDS_WIDTH / 2.0, CURVE_HEART_PEAK), start_location
+    // );
+    // path_builder.close();
 
     /*
      * Irf: Temporary workaround until the fix mentioned in this issue is released:
@@ -179,3 +200,56 @@ pub fn curve_eg_setup(mut commands: Commands) {
         Transform::default(),
     ));
 }
+
+// Curve example of drawing a heart that got too convoluted for use an an example. 
+//
+// pub const CURVE_WINDOW_WIDTH: f32 = 1600.0;
+// pub const CURVE_WINDOW_HEIGHT: f32 = 1600.0;
+// pub const CURVE_STEP: f64 = 1.0;
+// pub const CURVE_CLEAR_CLR: Color = Color::DARK_GRAY;
+// const CURVE_FILL_CLR: Color = Color::ORANGE;
+// const CURVE_STROKE_CLR: Color = Color::WHITE;
+// const CURVE_STROKE: f32 = 10.0;
+// const CURVE_COORDS_WIDTH: f32 = CURVE_WINDOW_WIDTH/2.0;
+// const CURVE_COORDS_HEIGHT: f32 = CURVE_WINDOW_HEIGHT/2.0;
+// const CURVE_HEART_CREST_START: f32 = CURVE_COORDS_HEIGHT / 4.0; // Where the mounds start
+// const CURVE_HEART_BOTTOM: f32 = -CURVE_COORDS_HEIGHT + CURVE_COORDS_HEIGHT / 6.0;
+// const CURVE_HEART_PEAK: f32 = CURVE_WINDOW_HEIGHT - CURVE_WINDOW_HEIGHT / 4.0;
+
+// pub fn curve_eg_setup(mut commands: Commands) {
+//     let mut path_builder = PathBuilder::new();
+//     let start_location = Vec2::new(0.0, CURVE_HEART_CREST_START);
+//     path_builder.move_to(start_location);
+//     path_builder.quadratic_bezier_to(
+//         Vec2::new(CURVE_COORDS_WIDTH / 2.0, CURVE_HEART_PEAK), 
+//         Vec2::new(CURVE_COORDS_WIDTH - CURVE_COORDS_WIDTH / 6.0, CURVE_HEART_CREST_START)
+//     );
+
+//     path_builder.line_to(Vec2::new(start_location.x, CURVE_HEART_BOTTOM));
+//     path_builder.line_to(Vec2::new(-
+//         CURVE_COORDS_WIDTH + CURVE_COORDS_WIDTH / 6.0, 
+//         CURVE_HEART_CREST_START
+//     ));
+//     path_builder.quadratic_bezier_to(
+//         Vec2::new(-CURVE_COORDS_WIDTH / 2.0, CURVE_HEART_PEAK), start_location
+//     );
+//     path_builder.close();
+
+//     /*
+//      * Irf: Temporary workaround until the fix mentioned in this issue is released:
+//      * https://github.com/Nilirad/bevy_prototype_lyon/issues/138
+//      */ 
+//     // let line = path_builder.build();
+//     let line = path_builder.build().0;
+
+//     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+//     commands.spawn_bundle(GeometryBuilder::build_as(
+//         &line,
+//         // DrawMode::Stroke(StrokeMode::new(Color::BLACK, 10.0)),
+//         DrawMode::Outlined {
+//             fill_mode: FillMode::color(CURVE_FILL_CLR),
+//             outline_mode: StrokeMode::new(CURVE_STROKE_CLR, CURVE_STROKE),
+//         },
+//         Transform::default(),
+//     ));
+// }
