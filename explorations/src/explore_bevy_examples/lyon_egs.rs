@@ -59,7 +59,7 @@ pub fn lyon_path_changing_eg_app() {
     // From https://github.com/Nilirad/bevy_prototype_lyon/blob/master/examples/path.rs
     App::new()
         .insert_resource(WindowDescriptor {
-            title: "Shifty Circle".to_string(),
+            title: "Path Changing Example".to_string(),
             width: eglib::CHANGER_WINDOW_WIDTH,
             height: eglib::CHANGER_WINDOW_HEIGHT,
             ..Default::default()
@@ -74,3 +74,25 @@ pub fn lyon_path_changing_eg_app() {
                 .with_run_criteria(FixedTimestep::step(eglib::CHANGER_STEP)))
         .run();
 }
+
+
+pub fn lyon_curve_eg_app() {
+    // From https://github.com/Nilirad/bevy_prototype_lyon/blob/master/examples/path.rs
+    App::new()
+        .insert_resource(WindowDescriptor {
+            title: "Curve Example".to_string(),
+            width: eglib::CURVE_WINDOW_WIDTH,
+            height: eglib::CURVE_WINDOW_HEIGHT,
+            ..Default::default()
+        })
+        .insert_resource(ClearColor(eglib::CURVE_CLEAR_CLR))
+        .insert_resource(Msaa { samples: 4 })
+        .add_plugins(DefaultPlugins)
+        .add_plugin(ShapePlugin)
+        .add_startup_system(eglib::curve_eg_setup)
+        // .add_system(
+        //     eglib::path_changer
+        //         .with_run_criteria(FixedTimestep::step(eglib::CURVE_STEP)))
+        .run();
+}
+
