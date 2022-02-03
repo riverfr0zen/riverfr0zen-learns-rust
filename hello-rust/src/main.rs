@@ -1,5 +1,9 @@
 use ferris_says::say;
 use std::io::{BufWriter, stdout};
+// use rand::Rng;
+// use rand::prelude::random;
+// use rand::prelude::thread_rng;
+use rand::prelude::*;
 
 fn main() {
 
@@ -27,6 +31,31 @@ fn main() {
     println!("floats {:?}", floats);
     println!("strings {:?}", strings);
     println!("ints_ints {:?}", ints_ints);
+
+    // Rand stuff
+    println!("\n---Random---");
+    let x: u8 = random();
+    println!("{}", x);
+    let y: u32 = random();
+    println!("{}", y);
+
+    if random() { // generates a boolean
+        println!("Heads!");
+    }
+
+    // If we want to be a bit more explicit (and a little more efficient) we can
+    // make a handle to the thread-local generator:
+    let mut rng = thread_rng();
+    if rng.gen() { // random bool
+        let x: f64 = rng.gen(); // random number in range [0, 1)
+        let y = rng.gen_range(-10.0..10.0);
+        println!("x is: {}", x);
+        println!("y is: {}", y);
+    }
+
+    println!("Die roll: {}", rng.gen_range(1..=6));
+    println!("Number from 0 to 9: {}", rng.gen_range(0..10));
+
 }
 
 

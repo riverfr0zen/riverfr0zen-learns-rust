@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy::core::FixedTimestep;
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 pub mod gamelib;
 
@@ -91,5 +92,7 @@ pub fn snakeapp() {
             .with_system(gamelib::size_scaling),
         )
         .add_plugins(DefaultPlugins)
+        .add_plugin(LogDiagnosticsPlugin::default())
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .run();   
 }

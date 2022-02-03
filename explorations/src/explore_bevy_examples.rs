@@ -1,6 +1,2 @@
 pub mod snakemod;
-
-
-pub fn snakeapp() {
-    snakemod::snakeapp();
-}
+pub mod lyon_egs;
