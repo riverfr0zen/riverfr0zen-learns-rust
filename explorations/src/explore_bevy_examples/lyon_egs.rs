@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy::core::FixedTimestep;
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+// use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 pub mod eglib;
 pub mod shiftyc;
@@ -49,8 +49,8 @@ pub fn shifty_circle_app() {
         .add_system(
             shiftyc::change_circle_destination
                 .with_run_criteria(FixedTimestep::step(shiftyc::SHIFTY_CHANGE_STEP)))
-        .add_plugin(LogDiagnosticsPlugin::default())
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        // .add_plugin(LogDiagnosticsPlugin::default())
+        // .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .run();
 }
 

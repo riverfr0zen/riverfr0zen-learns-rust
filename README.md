@@ -24,10 +24,7 @@ In addition the following was added to `.vscode/settings.json` to format code on
 ```
 
 
-See also the [Bevy exploration README](explore-bevy-book/README.md) for other installation requirements.
-
-
-# Further details around dev environment and tooling 
+# Further details around dev environment and tooling (must read)
 
 Below pulled from my project for learning Rust w/ Bevy.
 
@@ -56,6 +53,51 @@ Below pulled from my project for learning Rust w/ Bevy.
 `cargo run` build and run the project in one go
 
 `cargo update` update dependencies
+
+
+
+## Bevy Pre-requisites
+
+Based on [Bevy Linux documentation](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md):
+
+```
+sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev
+```
+
+
+## Bevy WASM Setup
+
+From [official example](https://github.com/bevyengine/bevy/tree/latest/examples#wasm):
+
+```
+rustup target add wasm32-unknown-unknown
+# Note: below is installed at the user level, not at this workspace level
+cargo install wasm-bindgen-cli
+```
+
+### Building and publishing WASM examples
+
+1. Generate the WASM assets:
+
+```
+cargo build --example shifty_circle --target wasm32-unknown-unknown --no-default-features
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/shifty_circle.wasm
+
+cargo build --example lyon_curve_eg --target wasm32-unknown-unknown --no-default-features
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/lyon_curve_eg.wasm
+
+
+cargo build --example snakeapp --target wasm32-unknown-unknown --no-default-features
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/snakeapp.wasm
+
+
+```
+
+2. Create the html file that points to the WASM's .js (see `examples/wasm/shifty_circle.html`)
+
+3. Serve it, e.g. `python3 -m http.server`
+
+4. Access, e.g. http://localhost:8000/examples/wasm/shifty_circle.html
 
 
 ## Rust language server choice & VSCode extension
