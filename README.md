@@ -56,50 +56,6 @@ Below pulled from my project for learning Rust w/ Bevy.
 
 
 
-## Bevy Pre-requisites
-
-Based on [Bevy Linux documentation](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md):
-
-```
-sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev
-```
-
-
-## Bevy WASM Setup
-
-From [official example](https://github.com/bevyengine/bevy/tree/latest/examples#wasm):
-
-```
-rustup target add wasm32-unknown-unknown
-# Note: below is installed at the user level, not at this workspace level
-cargo install wasm-bindgen-cli
-```
-
-### Building and publishing WASM examples
-
-1. Generate the WASM assets:
-
-```
-cargo build --example shifty_circle --target wasm32-unknown-unknown --no-default-features
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/shifty_circle.wasm
-
-cargo build --example lyon_curve_eg --target wasm32-unknown-unknown --no-default-features
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/lyon_curve_eg.wasm
-
-
-cargo build --example snakeapp --target wasm32-unknown-unknown --no-default-features
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/snakeapp.wasm
-
-
-```
-
-2. Create the html file that points to the WASM's .js (see `examples/wasm/shifty_circle.html`)
-
-3. Serve it, e.g. `python3 -m http.server`
-
-4. Access, e.g. http://localhost:8000/examples/wasm/shifty_circle.html
-
-
 ## Rust language server choice & VSCode extension
 
 [RLS](https://github.com/rust-lang/rls) VS [rust-analyzer](https://rust-analyzer.github.io/) 
@@ -141,6 +97,69 @@ Several methods to speed up compilation are listed at this [resource](https://be
 * Enable Bevy's Dynamic Linking Feature (See [explorations Cargo.toml](explorations/Cargo.toml))
 
 There are additional things that can be done, but so far this has been enough for me. Maybe as my projects become more complex I can revisit.
+
+
+## Bevy Pre-requisites
+
+Based on [Bevy Linux documentation](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md):
+
+```
+sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev
+```
+
+
+## Bevy WASM Setup
+
+From [official example](https://github.com/bevyengine/bevy/tree/latest/examples#wasm):
+
+```
+rustup target add wasm32-unknown-unknown
+# Note: below is installed at the user level, not at this workspace level
+cargo install wasm-bindgen-cli
+```
+
+
+### wasm-server-runner to quickly run games
+
+From [Bevy Cheat Book](https://bevy-cheatbook.github.io/platforms/wasm.html):
+
+```
+cargo install wasm-server-runner
+```
+
+Now you can quickly run a game as WASM with a run command like:
+
+```
+cargo run --target wasm32-unknown-unknown --example shifty_circle
+```
+
+(This will start a minimal webserver running the game that you can point your browser at)
+
+
+### Building and publishing WASM examples
+
+1. Generate the WASM assets:
+
+```
+cargo build --example shifty_circle --target wasm32-unknown-unknown --no-default-features
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/shifty_circle.wasm
+
+cargo build --example lyon_curve_eg --target wasm32-unknown-unknown --no-default-features
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/lyon_curve_eg.wasm
+
+
+cargo build --example snakeapp --target wasm32-unknown-unknown --no-default-features
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/snakeapp.wasm
+
+
+```
+
+2. Create the html file that points to the WASM's .js (see `examples/wasm/shifty_circle.html`)
+
+3. Serve it, e.g. `python3 -m http.server`
+
+4. Access, e.g. http://localhost:8000/examples/wasm/shifty_circle.html
+
 
 # Issues log
  
