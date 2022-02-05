@@ -127,7 +127,14 @@ From [Bevy Cheat Book](https://bevy-cheatbook.github.io/platforms/wasm.html):
 cargo install wasm-server-runner
 ```
 
-Now you can quickly run a game as WASM with a run command like:
+Then add the following into `.cargo/config.toml` under your project (create if not there):
+
+```
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
+```
+
+Now you can quickly run a game as WASM with a cargo run command like:
 
 ```
 cargo run --target wasm32-unknown-unknown --example shifty_circle
@@ -141,15 +148,16 @@ cargo run --target wasm32-unknown-unknown --example shifty_circle
 1. Generate the WASM assets:
 
 ```
-cargo build --example shifty_circle --target wasm32-unknown-unknown --no-default-features
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/shifty_circle.wasm
 
-cargo build --example lyon_curve_eg --target wasm32-unknown-unknown --no-default-features
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/lyon_curve_eg.wasm
+cargo build --release --example shifty_circle --target wasm32-unknown-unknown
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/shifty_circle.wasm
+
+cargo build --release --example lyon_curve_eg --target wasm32-unknown-unknown
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/lyon_curve_eg.wasm
 
 
-cargo build --example snakeapp --target wasm32-unknown-unknown --no-default-features
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/debug/examples/snakeapp.wasm
+cargo build --release --example snakeapp --target wasm32-unknown-unknown
+wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/snakeapp.wasm
 
 
 ```
