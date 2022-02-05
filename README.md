@@ -145,19 +145,22 @@ cargo run --target wasm32-unknown-unknown --example shifty_circle
 
 ### Building and publishing WASM examples
 
-1. Generate the WASM assets:
+1. Generate the WASM assets. 
+
+Note that we are building and using **release** builds here. Otherwise you get [issues like this](https://github.com/bevyengine/bevy/issues/3867), which rather makes sense (doh).
+
 
 ```
 
 cargo build --release --example shifty_circle --target wasm32-unknown-unknown
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/shifty_circle.wasm
+wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/shifty_circle.wasm
 
 cargo build --release --example lyon_curve_eg --target wasm32-unknown-unknown
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/lyon_curve_eg.wasm
+wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/lyon_curve_eg.wasm
 
 
 cargo build --release --example snakeapp --target wasm32-unknown-unknown
-wasm-bindgen --out-dir examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/snakeapp.wasm
+wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/snakeapp.wasm
 
 
 ```

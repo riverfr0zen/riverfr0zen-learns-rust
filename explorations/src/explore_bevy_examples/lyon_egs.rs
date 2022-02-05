@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy::core::FixedTimestep;
-// use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 pub mod eglib;
 pub mod shiftyc;
+
 
 pub fn lyon_eg_app() {
     App::new()
@@ -29,6 +30,7 @@ pub fn lyon_path_eg_app() {
 
 pub fn shifty_circle_app() {
     // From https://github.com/Nilirad/bevy_prototype_lyon/blob/master/examples/path.rs
+
     App::new()
         .insert_resource(WindowDescriptor {
             title: "Shifty Circle".to_string(),
@@ -49,8 +51,8 @@ pub fn shifty_circle_app() {
         .add_system(
             shiftyc::change_circle_destination
                 .with_run_criteria(FixedTimestep::step(shiftyc::SHIFTY_CHANGE_STEP)))
-        // .add_plugin(LogDiagnosticsPlugin::default())
-        // .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugin(LogDiagnosticsPlugin::default())
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .run();
 }
 

@@ -4,20 +4,20 @@ use rand::Rng;
 use rand::prelude::thread_rng;
 
 
+
 // pub const WINDOW_WIDTH: f32 = 3200.0;
 // pub const WINDOW_HEIGHT: f32 = 2400.0;
-// pub const WINDOW_WIDTH: f32 = 1600.0;
-// pub const WINDOW_HEIGHT: f32 = 1600.0;
-pub const WINDOW_WIDTH: f32 = 1200.0;
-pub const WINDOW_HEIGHT: f32 = 1200.0;
-pub const SHIFTY_CIRCLE_STEP: f64 = 1.0;
-pub const SHIFTY_CHANGE_STEP: f64 = 10.0;
-pub const CLEAR_COLOR: Color = Color::MIDNIGHT_BLUE;
-const SHIFTY_CIRCLE_RADIUS: f32 = 10.0;
+pub const WINDOW_WIDTH: f32 = 1600.0;
+pub const WINDOW_HEIGHT: f32 = 1600.0;
+pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
+pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
+pub const CLEAR_COLOR: Color = Color::INDIGO;
+const SHIFTY_CIRCLE_RADIUS: f32 = 50.0;
 const SHIFTY_CIRCLE_STROKE: f32 = 5.0;
 const SHIFTY_CIRCLE_MIN_SPEED: f32 = 0.1;
-const SHIFTY_CIRCLE_MAX_SPEED: f32 = 100.0;
-const SHIFTY_CIRCLE_FILL_COLOR: Color = Color::rgba(0.0, 1.0, 0.0, 0.2);
+const SHIFTY_CIRCLE_MAX_SPEED: f32 = 50.0;
+// const SHIFTY_CIRCLE_FILL_COLOR: Color = Color::rgba(0.0, 1.0, 0.0, 0.2);
+const SHIFTY_CIRCLE_FILL_COLOR: Color = Color::RED;
 const SHIFTY_CIRCLE_STROKE_COLOR: Color = Color::ORANGE;
 const DEST_LOW_X: f32 = -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS;
 const DEST_HIGH_X: f32 = WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS;
