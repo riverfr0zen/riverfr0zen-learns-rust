@@ -4,12 +4,10 @@ use bevy_prototype_lyon::prelude::*;
 use rand::Rng;
 use rand::prelude::thread_rng;
 
-
-
 // pub const WINDOW_WIDTH: f32 = 3200.0;
 // pub const WINDOW_HEIGHT: f32 = 2400.0;
-pub const WINDOW_WIDTH: f32 = 1600.0;
-pub const WINDOW_HEIGHT: f32 = 1600.0;
+pub const WINDOW_WIDTH: f32 = 800.0;
+pub const WINDOW_HEIGHT: f32 = 600.0;
 pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
 pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
 pub const CLEAR_COLOR: Color = Color::INDIGO;
@@ -20,10 +18,6 @@ const SHIFTY_CIRCLE_MAX_SPEED: f32 = 50.0;
 // const SHIFTY_CIRCLE_FILL_COLOR: Color = Color::rgba(0.0, 1.0, 0.0, 0.2);
 const SHIFTY_CIRCLE_FILL_COLOR: Color = Color::RED;
 const SHIFTY_CIRCLE_STROKE_COLOR: Color = Color::ORANGE;
-const DEST_LOW_X: f32 = -WINDOW_WIDTH/2.0+SHIFTY_CIRCLE_RADIUS;
-const DEST_HIGH_X: f32 = WINDOW_WIDTH/2.0-SHIFTY_CIRCLE_RADIUS;
-const DEST_LOW_Y: f32 = -WINDOW_HEIGHT/2.0+SHIFTY_CIRCLE_RADIUS;
-const DEST_HIGH_Y: f32 = WINDOW_HEIGHT/2.0-SHIFTY_CIRCLE_RADIUS;
 
 
 #[derive(Component)]
@@ -122,11 +116,21 @@ pub fn translate_circle(mut q: Query<(&mut Transform, &Destination)>) {
 }
 
 
-pub fn change_circle_destination(mut q: Query<&mut Destination, With<ShiftyCircle>>) {
+pub fn change_circle_destination(windows: Res<Windows>, mut q: Query<&mut Destination, With<ShiftyCircle>>) {
+    let window = windows.get_primary().unwrap();
+    // @TODO: these should be app level settings and should be set in
+    // `handle_browser_resize()`
+    let dest_low_x = -window.width() / 2.0 + SHIFTY_CIRCLE_RADIUS;
+    let dest_high_x = window.width() / 2.0 - SHIFTY_CIRCLE_RADIUS;
+    let dest_low_y = -window.height() / 2.0 + SHIFTY_CIRCLE_RADIUS;
+    let dest_high_y = window.height() / 2.0 - SHIFTY_CIRCLE_RADIUS;
+
+
     let mut rng = thread_rng();
     for mut dest in q.iter_mut() {
-        dest.x = rng.gen_range(DEST_LOW_X..DEST_HIGH_X);
-        dest.y = rng.gen_range(DEST_LOW_Y..DEST_HIGH_Y);
+        dest.x = rng.gen_range(dest_low_x..dest_high_x);
+        dest.y = rng.gen_range(dest_low_y..dest_high_y);
+
         dest.speed = rng.gen_range(SHIFTY_CIRCLE_MIN_SPEED..SHIFTY_CIRCLE_MAX_SPEED);
         // println!("x: {}", dest.x);
         // println!("y: {}", dest.y);
