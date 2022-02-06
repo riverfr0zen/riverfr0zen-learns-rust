@@ -1274,6 +1274,7 @@ dependencies = [
  "bevy",
  "bevy_prototype_lyon",
  "rand",
+ "web-sys",
 ]
 
 [[package]]

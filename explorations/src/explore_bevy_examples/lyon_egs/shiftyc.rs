@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::window::WindowCreated;
 use bevy_prototype_lyon::prelude::*;
 use rand::Rng;
 use rand::prelude::thread_rng;
@@ -68,6 +69,37 @@ pub fn setup_shifty_circle(mut commands: Commands) {
     .insert(ShiftyCircle)
     .insert(Destination { x: 0.0, y: 0.0, speed: SHIFTY_CIRCLE_MIN_SPEED });
 }
+
+
+// Based on https://github.com/bevyengine/bevy/issues/175
+// 
+// Call the handle_browser_resize system once at startup (if window is created)
+// to cover for the short period before handle_browser_resize kicks in
+// (since that system will likely be set to a FixedTimeStep)
+pub fn setup_browser_size(
+    windows: ResMut<Windows>, 
+    mut window_created_reader: EventReader<WindowCreated>
+) {
+    if window_created_reader.iter().next().is_some() {
+        handle_browser_resize(windows);
+    }
+}
+
+
+// Based on this Discord conversation: https://i.imgur.com/osfA8PH.png AND
+// https://github.com/mrk-its/bevy-robbo/blob/master/src/main.rs
+pub fn handle_browser_resize(mut windows: ResMut<Windows>) {
+    let window = windows.get_primary_mut().unwrap();
+    let wasm_window = web_sys::window().unwrap();
+    let (target_width, target_height) = (
+        wasm_window.inner_width().unwrap().as_f64().unwrap() as f32,
+        wasm_window.inner_height().unwrap().as_f64().unwrap() as f32,
+    );
+    if window.width() != target_width || window.height() != target_height {
+        window.set_resolution(target_width, target_height);
+    }
+}
+
 
 
 pub fn translate_circle(mut q: Query<(&mut Transform, &Destination)>) {

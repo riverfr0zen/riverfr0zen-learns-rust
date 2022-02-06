@@ -23,5 +23,24 @@
   <script type="module">
     import init from './target/shifty_circle.js'
     init()
+
+    resize_canvas()
+    
+    window.addEventListener("resize", resize_canvas);
+
+    function resize_canvas() {
+        let canvas = document.getElementById("window-matching-canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
   </script>
+
+  <body style="margin: 0 !important; padding: 0 !important;">
+    <canvas id="window-matching-canvas"></canvas>
+  </body>
+  
+
+
+
 </html>
