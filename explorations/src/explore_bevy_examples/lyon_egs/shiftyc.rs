@@ -9,7 +9,7 @@ use rand::prelude::thread_rng;
 pub const WINDOW_WIDTH: f32 = 800.0;
 pub const WINDOW_HEIGHT: f32 = 600.0;
 pub const SHIFTY_CIRCLE_STEP: f64 = 0.01;
-pub const SHIFTY_CHANGE_STEP: f64 = 2.0;
+pub const SHIFTY_CHANGE_STEP: f64 = 0.5;
 pub const CLEAR_COLOR: Color = Color::INDIGO;
 const SHIFTY_CIRCLE_RADIUS: f32 = 50.0;
 const SHIFTY_CIRCLE_STROKE: f32 = 5.0;
