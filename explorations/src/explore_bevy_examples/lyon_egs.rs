@@ -43,7 +43,12 @@ pub fn shifty_circle_app() {
             canvas: Some("#window-matching-canvas".to_string()),
             ..Default::default()
         }
-    ).insert_resource(ClearColor(shiftyc::CLEAR_COLOR))
+    ).insert_resource(shiftyc::AppGlobals {
+        dest_low_x: -shiftyc::WINDOW_WIDTH / 2.0,
+        dest_high_x: shiftyc::WINDOW_WIDTH / 2.0,
+        dest_low_y: -shiftyc::WINDOW_HEIGHT / 2.0,
+        dest_high_y: shiftyc::WINDOW_HEIGHT / 2.0,
+    }).insert_resource(ClearColor(shiftyc::CLEAR_COLOR))
     .insert_resource(Msaa { samples: 4 })
     .add_plugins(DefaultPlugins)
     .add_plugin(ShapePlugin)
