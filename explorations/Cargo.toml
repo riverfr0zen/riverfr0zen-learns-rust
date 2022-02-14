@@ -13,6 +13,15 @@ edition = "2021"
 # libbevy_dylib alongside your game if you want it to run" 
 # (See https://bevyengine.org/learn/book/getting-started/setup/)
 #
-bevy = { version = "0.6.0", features = ["dynamic"] }
+# bevy = { version = "0.6.0", features = ["dynamic"] }
+bevy = { version = "0.6.0" }
 bevy_prototype_lyon = "0.4.0"
 rand = "0.8.4"
+web-sys = { version = "0.3.56", features = ['Window'] }
+
+[features]
+framestats = []
+
+[profile.release]
+lto = true
+opt-level = "z"

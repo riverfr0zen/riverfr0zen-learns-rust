@@ -24,10 +24,7 @@ In addition the following was added to `.vscode/settings.json` to format code on
 ```
 
 
-See also the [Bevy exploration README](explore-bevy-book/README.md) for other installation requirements.
-
-
-# Further details around dev environment and tooling 
+# Further details around dev environment and tooling (must read)
 
 Below pulled from my project for learning Rust w/ Bevy.
 
@@ -56,6 +53,7 @@ Below pulled from my project for learning Rust w/ Bevy.
 `cargo run` build and run the project in one go
 
 `cargo update` update dependencies
+
 
 
 ## Rust language server choice & VSCode extension
@@ -99,6 +97,80 @@ Several methods to speed up compilation are listed at this [resource](https://be
 * Enable Bevy's Dynamic Linking Feature (See [explorations Cargo.toml](explorations/Cargo.toml))
 
 There are additional things that can be done, but so far this has been enough for me. Maybe as my projects become more complex I can revisit.
+
+
+## Bevy Pre-requisites
+
+Based on [Bevy Linux documentation](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md):
+
+```
+sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev
+```
+
+
+## Bevy WASM Setup
+
+From [official example](https://github.com/bevyengine/bevy/tree/latest/examples#wasm):
+
+```
+rustup target add wasm32-unknown-unknown
+# Note: below is installed at the user level, not at this workspace level
+cargo install wasm-bindgen-cli
+```
+
+
+### wasm-server-runner to quickly run games
+
+From [Bevy Cheat Book](https://bevy-cheatbook.github.io/platforms/wasm.html):
+
+```
+cargo install wasm-server-runner
+```
+
+Then add the following into `.cargo/config.toml` under your project (create if not there):
+
+```
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
+```
+
+Now you can quickly run a game as WASM with a cargo run command like:
+
+```
+cargo run --target wasm32-unknown-unknown --example shifty_circle
+```
+
+(This will start a minimal webserver running the game that you can point your browser at)
+
+
+### Building and publishing WASM examples
+
+1. Generate the WASM assets. 
+
+Note that we are building and using **release** builds here. Otherwise you get [issues like this](https://github.com/bevyengine/bevy/issues/3867), which rather makes sense (doh).
+
+
+```
+
+cargo build --release --example shifty_circle --target wasm32-unknown-unknown
+wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/shifty_circle.wasm
+
+cargo build --release --example lyon_curve_eg --target wasm32-unknown-unknown
+wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/lyon_curve_eg.wasm
+
+
+cargo build --release --example snakeapp --target wasm32-unknown-unknown
+wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/snakeapp.wasm
+
+
+```
+
+2. Create the html file that points to the WASM's .js (see `examples/wasm/shifty_circle.html`)
+
+3. Serve it, e.g. `python3 -m http.server`
+
+4. Access, e.g. http://localhost:8000/examples/wasm/shifty_circle.html
+
 
 # Issues log
  
