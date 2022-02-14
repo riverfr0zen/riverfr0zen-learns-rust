@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy::core::FixedTimestep;
+#[cfg(feature = "framestats")]
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 pub mod eglib;
@@ -49,12 +50,21 @@ pub fn shifty_circle_app() {
         dest_low_y: -shiftyc::WINDOW_HEIGHT / 2.0,
         dest_high_y: shiftyc::WINDOW_HEIGHT / 2.0,
     }).insert_resource(ClearColor(shiftyc::CLEAR_COLOR))
-    .insert_resource(Msaa { samples: 4 })
-    .add_plugins(DefaultPlugins)
-    .add_plugin(ShapePlugin)
-    .add_plugin(LogDiagnosticsPlugin::default())
-    .add_plugin(FrameTimeDiagnosticsPlugin::default())
-    .add_startup_system(shiftyc::setup_shifty_circle);
+    .insert_resource(Msaa { samples: 4 });
+
+    info!("--Logging does not start before DefaultPlugins so this log won't appear--");
+    app.add_plugins(DefaultPlugins);
+    warn!("--Logging has been set up in DefaultPlugins--");
+
+    app.add_plugin(ShapePlugin);
+
+    // Example of "feature-flipping". 
+    // See https://doc.rust-lang.org/cargo/reference/features.html
+    #[cfg(feature = "framestats")]
+    app.add_plugin(LogDiagnosticsPlugin::default())
+    .add_plugin(FrameTimeDiagnosticsPlugin::default());
+
+    app.add_startup_system(shiftyc::setup_shifty_circle);
 
     #[cfg(target_arch = "wasm32")]
     app.add_startup_system(shiftyc::setup_browser_size)
@@ -71,7 +81,6 @@ pub fn shifty_circle_app() {
         shiftyc::change_circle_destination
             .with_run_criteria(FixedTimestep::step(shiftyc::SHIFTY_CHANGE_STEP))
     );
-
 
     app.run();
 }
