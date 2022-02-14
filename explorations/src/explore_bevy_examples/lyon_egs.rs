@@ -54,7 +54,7 @@ pub fn shifty_circle_app() {
 
     info!("--Logging does not start before DefaultPlugins so this log won't appear--");
     app.add_plugins(DefaultPlugins);
-    warn!("--Logging has been set up in DefaultPlugins--");
+    info!("--Logging has been set up in DefaultPlugins--");
 
     app.add_plugin(ShapePlugin);
 

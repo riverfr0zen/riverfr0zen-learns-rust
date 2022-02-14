@@ -151,15 +151,20 @@ Note that we are building and using **release** builds here. Otherwise you get [
 
 
 ```
-
+# shifty_circle
 cargo build --release --example shifty_circle --target wasm32-unknown-unknown
+cargo build --release --example shifty_circle --target wasm32-unknown-unknown --features=framestats
+
 wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/shifty_circle.wasm
 
+# lyon_curve_eg
 cargo build --release --example lyon_curve_eg --target wasm32-unknown-unknown
+
 wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/lyon_curve_eg.wasm
 
-
+# snakeapp
 cargo build --release --example snakeapp --target wasm32-unknown-unknown
+
 wasm-bindgen --out-dir www-examples/wasm/target --target web target/wasm32-unknown-unknown/release/examples/snakeapp.wasm
 
 
